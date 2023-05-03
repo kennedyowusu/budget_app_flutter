@@ -1,18 +1,107 @@
+import 'package:budget_app_flutter/constants/colors.dart';
+import 'package:budget_app_flutter/controller/login_controller.dart';
+import 'package:budget_app_flutter/helper/calculate_responsiveness.dart';
+import 'package:budget_app_flutter/view/authentication/sign_up.dart';
+import 'package:budget_app_flutter/widgets/custom_button.dart';
+import 'package:budget_app_flutter/widgets/custom_radius.dart';
+import 'package:budget_app_flutter/widgets/custom_text.dart';
+import 'package:budget_app_flutter/widgets/custom_text_field.dart';
+import 'package:budget_app_flutter/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class LoginView extends StatelessWidget {
-  const LoginView({super.key});
+  final LoginController _loginController = Get.put(LoginController());
+
+  LoginView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final responsiveValues = calculateResponsiveValues(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Login'),
-      ),
-      body: Center(
-        child: Text(
-          'Login View',
-          style: TextStyle(fontSize: 24.0),
+      backgroundColor: backgroundColor,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(responsiveValues['horizontalSpacing']!),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(height: responsiveValues['verticalSpacing']!),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: CustomText(
+                    text: 'Welcome Back',
+                    style: titleStyle,
+                  ),
+                ),
+                SizedBox(height: responsiveValues['verticalSpacing']! * 2),
+                LogoContainer(
+                  radius: MediaQuery.of(context).size.width * 0.15,
+                ),
+                SizedBox(height: responsiveValues['verticalSpacing']! * 2),
+                CustomTextField(
+                  key: Key('email'),
+                  controller: _loginController.usernameController,
+                  labelText: 'Email Address',
+                  onChanged: (value) => _loginController.setUsername(value),
+                  height: responsiveValues['textFieldHeight']!,
+                ),
+                SizedBox(height: responsiveValues['verticalSpacing']!),
+                CustomTextField(
+                  key: Key('password'),
+                  controller: _loginController.passwordController,
+                  labelText: 'Password',
+                  obscureText: true,
+                  onChanged: (value) => _loginController.setPassword(value),
+                  height: responsiveValues['textFieldHeight']!,
+                ),
+                SizedBox(height: responsiveValues['verticalSpacing']! * 2),
+                CustomButton(
+                  text: 'Login',
+                  onPressed: () {
+                    if (_loginController.usernameController.text.isEmpty ||
+                        _loginController.usernameController.text == '' ||
+                        _loginController.passwordController.text.isEmpty ||
+                        _loginController.passwordController.text == '') {
+                      ToastWidget.showToast('Please fill in all fields');
+                      return;
+                    }
+                    _loginController.login();
+                  },
+                  height: responsiveValues['buttonHeight']!,
+                ),
+                SizedBox(height: responsiveValues['verticalSpacing']! * 2),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Don\'t have an account?',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: MediaQuery.of(context).size.width * 0.04,
+                      ),
+                    ),
+                    SizedBox(
+                        width: responsiveValues['horizontalSpacing']! * 0.5),
+                    GestureDetector(
+                      onTap: () {
+                        Get.to(() => SignUpView());
+                      },
+                      child: Text(
+                        'Sign Up',
+                        style: TextStyle(
+                          color: mainColor,
+                          fontSize: MediaQuery.of(context).size.width * 0.04,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
