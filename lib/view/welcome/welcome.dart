@@ -1,3 +1,4 @@
+import 'package:budget_app_flutter/constants/colors.dart';
 import 'package:budget_app_flutter/view/authentication/login.dart';
 import 'package:budget_app_flutter/view/authentication/sign_up.dart';
 import 'package:budget_app_flutter/widgets/custom_button.dart';
@@ -9,38 +10,43 @@ class WelcomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Welcome to the App',
-              style: TextStyle(
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold,
+      backgroundColor: backgroundColor,
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 12.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Spacer(),
+              Center(
+                child: Text(
+                  'Your Money Your Way'.toUpperCase(),
+                  style: titleStyle,
+                ),
               ),
-            ),
-            SizedBox(height: 30.0),
-            CustomButton(
-              text: 'Login',
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginView()),
-                );
-              },
-            ),
-            SizedBox(height: 10.0),
-            CustomButton(
-              text: 'Sign Up',
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SignUpView()),
-                );
-              },
-            ),
-          ],
+              Spacer(),
+              CustomButton(
+                text: 'Login',
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginView()),
+                  );
+                },
+              ),
+              SizedBox(height: 10.0),
+              CustomButton(
+                text: 'Sign Up',
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SignUpView()),
+                  );
+                },
+              ),
+              SizedBox(height: 20.0),
+            ],
+          ),
         ),
       ),
     );
