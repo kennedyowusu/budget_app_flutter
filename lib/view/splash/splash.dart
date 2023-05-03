@@ -44,11 +44,7 @@ class _SplashViewState extends State<SplashView> {
               SizedBox(height: 20.0),
               Text(
                 'Budget App'.toUpperCase(),
-                style: TextStyle(
-                  color: textColor,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: titleStyle,
               ),
             ],
           ),
