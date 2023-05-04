@@ -11,7 +11,7 @@ class NoInternetScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: backgroundColor,
       body: SafeArea(
         child: Center(
           child: Padding(
