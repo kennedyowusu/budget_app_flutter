@@ -1,3 +1,4 @@
+import 'package:budget_app_flutter/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
@@ -33,6 +34,12 @@ class CustomTextField extends StatelessWidget {
         labelText: labelText,
         hintText: hintText,
         prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(
+            color: textColor,
+          ),
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
