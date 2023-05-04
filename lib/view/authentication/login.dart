@@ -3,6 +3,8 @@ import 'package:budget_app_flutter/controller/login_controller.dart';
 import 'package:budget_app_flutter/helper/calculate_responsiveness.dart';
 import 'package:budget_app_flutter/view/authentication/sign_up.dart';
 import 'package:budget_app_flutter/widgets/custom_button.dart';
+import 'package:budget_app_flutter/widgets/custom_footer_section.dart';
+import 'package:budget_app_flutter/widgets/custom_loader.dart';
 import 'package:budget_app_flutter/widgets/custom_radius.dart';
 import 'package:budget_app_flutter/widgets/custom_text.dart';
 import 'package:budget_app_flutter/widgets/custom_text_field.dart';
@@ -61,41 +63,25 @@ class LoginView extends StatelessWidget {
                     height: responsiveValues['textFieldHeight']!,
                   ),
                   SizedBox(height: responsiveValues['verticalSpacing']! * 2),
-                  CustomButton(
-                    text: 'Login',
-                    onPressed: () {
-                      _loginController.login();
-                    },
-                    height: responsiveValues['buttonHeight']!,
+                  Obx(
+                    () => _loginController.isLoading.value
+                        ? LoadingWidget()
+                        : CustomButton(
+                            text: 'Login',
+                            onPressed: () {
+                              _loginController.login();
+                            },
+                            height: responsiveValues['buttonHeight']!,
+                          ),
                   ),
                   SizedBox(height: responsiveValues['verticalSpacing']! * 2),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Don\'t have an account?',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: MediaQuery.of(context).size.width * 0.04,
-                        ),
-                      ),
-                      SizedBox(
-                        width: responsiveValues['horizontalSpacing']! * 0.5,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Get.to(() => SignUpView());
-                        },
-                        child: Text(
-                          'Sign Up',
-                          style: TextStyle(
-                            color: mainColor,
-                            fontSize: MediaQuery.of(context).size.width * 0.04,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
+                  BuildFooterSection(
+                    responsiveValues: responsiveValues,
+                    onPressed: () {
+                      Get.to(() => SignUpView());
+                    },
+                    text: 'Don\'t have an account?',
+                    subText: 'Sign Up',
                   ),
                 ],
               ),
