@@ -1,3 +1,4 @@
+import 'package:budget_app_flutter/constants/colors.dart';
 import 'package:budget_app_flutter/widgets/custom_appbar.dart';
 import 'package:budget_app_flutter/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ class UnknownScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: backgroundColor,
       appBar: CustomAppBar(
         title: 'Page Not Found',
       ),
