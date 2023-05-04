@@ -13,6 +13,7 @@ import 'package:get/get.dart';
 
 class LoginView extends StatelessWidget {
   final LoginController _loginController = Get.put(LoginController());
+  static const routeName = '/login';
 
   LoginView({Key? key}) : super(key: key);
 
