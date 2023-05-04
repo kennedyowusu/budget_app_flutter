@@ -1,3 +1,4 @@
+import 'package:budget_app_flutter/constants/colors.dart';
 import 'package:budget_app_flutter/widgets/custom_appbar.dart';
 import 'package:budget_app_flutter/widgets/custom_widget.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ class ProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: backgroundColor,
       key: _scaffoldKey,
       appBar: CustomAppBar(
         title: 'Profile',
