@@ -24,104 +24,103 @@ class SignUpView extends StatelessWidget {
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.all(responsiveValues['horizontalSpacing']!),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(height: responsiveValues['verticalSpacing']!),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: CustomText(
-                    text: 'Create Account',
-                    style: titleStyle,
-                  ),
-                ),
-                SizedBox(height: responsiveValues['verticalSpacing']! * 2),
-                LogoContainer(
-                  radius: MediaQuery.of(context).size.width * 0.15,
-                ),
-                SizedBox(height: responsiveValues['verticalSpacing']! * 2),
-                CustomTextField(
-                  key: Key('name'),
-                  controller: _signupController.nameController,
-                  labelText: 'Full Name',
-                  onChanged: (value) => _signupController.setName(value),
-                  height: responsiveValues['textFieldHeight']!,
-                ),
-                SizedBox(height: responsiveValues['verticalSpacing']!),
-                CustomTextField(
-                  key: Key('email'),
-                  controller: _signupController.emailController,
-                  labelText: 'Email Address',
-                  onChanged: (value) => _signupController.setEmail(value),
-                  height: responsiveValues['textFieldHeight']!,
-                ),
-                SizedBox(height: responsiveValues['verticalSpacing']!),
-                CustomTextField(
-                  key: Key('password'),
-                  controller: _signupController.passwordController,
-                  labelText: 'Password',
-                  obscureText: true,
-                  onChanged: (value) => _signupController.setPassword(value),
-                  height: responsiveValues['textFieldHeight']!,
-                ),
-                SizedBox(height: responsiveValues['verticalSpacing']!),
-                CustomTextField(
-                  key: Key('confirmPassword'),
-                  controller: _signupController.confirmPasswordController,
-                  labelText: 'Confirm Password',
-                  obscureText: true,
-                  onChanged: (value) =>
-                      _signupController.setConfirmPassword(value),
-                  height: responsiveValues['textFieldHeight']!,
-                ),
-                SizedBox(height: responsiveValues['verticalSpacing']! * 2),
-                CustomButton(
-                  text: 'Login',
-                  onPressed: () {
-                    if (_signupController.name.value.isEmpty ||
-                        _signupController.email.value.isEmpty ||
-                        _signupController.password.value.isEmpty ||
-                        _signupController.confirmPassword.value.isEmpty) {
-                      ToastWidget.showToast('Please fill in all fields');
-                      return;
-                    } else if (_signupController.password.value !=
-                        _signupController.confirmPassword.value) {
-                      ToastWidget.showToast('Passwords do not match');
-                      return;
-                    }
-                    _signupController.signUp();
-                  },
-                  height: responsiveValues['buttonHeight']!,
-                ),
-                SizedBox(height: responsiveValues['verticalSpacing']! * 2),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Don\'t have an account?',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: MediaQuery.of(context).size.width * 0.04,
-                      ),
+            child: Form(
+              key: _signupController.signupFormKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(height: responsiveValues['verticalSpacing']!),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: CustomText(
+                      text: 'Create Account',
+                      style: titleStyle,
                     ),
-                    SizedBox(
-                        width: responsiveValues['horizontalSpacing']! * 0.5),
-                    GestureDetector(
-                      onTap: () {
-                        Get.to(() => LoginView());
-                      },
-                      child: Text(
-                        'Sign In',
+                  ),
+                  SizedBox(height: responsiveValues['verticalSpacing']! * 2),
+                  LogoContainer(
+                    radius: MediaQuery.of(context).size.width * 0.15,
+                  ),
+                  SizedBox(height: responsiveValues['verticalSpacing']! * 2),
+                  CustomTextField(
+                    validator: (value) => _signupController.validateName(value),
+                    key: Key('name'),
+                    controller: _signupController.nameController,
+                    labelText: 'Full Name',
+                    onChanged: (value) => _signupController.setName(value),
+                    height: responsiveValues['textFieldHeight']!,
+                  ),
+                  SizedBox(height: responsiveValues['verticalSpacing']!),
+                  CustomTextField(
+                    validator: (value) =>
+                        _signupController.validateEmail(value),
+                    key: Key('email'),
+                    controller: _signupController.emailController,
+                    labelText: 'Email Address',
+                    onChanged: (value) => _signupController.setEmail(value),
+                    height: responsiveValues['textFieldHeight']!,
+                  ),
+                  SizedBox(height: responsiveValues['verticalSpacing']!),
+                  CustomTextField(
+                    validator: (value) =>
+                        _signupController.validatePassword(value),
+                    key: Key('password'),
+                    controller: _signupController.passwordController,
+                    labelText: 'Password',
+                    obscureText: true,
+                    onChanged: (value) => _signupController.setPassword(value),
+                    height: responsiveValues['textFieldHeight']!,
+                  ),
+                  SizedBox(height: responsiveValues['verticalSpacing']!),
+                  CustomTextField(
+                    validator: (value) =>
+                        _signupController.validateConfirmPassword(value),
+                    key: Key('confirmPassword'),
+                    controller: _signupController.confirmPasswordController,
+                    labelText: 'Confirm Password',
+                    obscureText: true,
+                    onChanged: (value) =>
+                        _signupController.setConfirmPassword(value),
+                    height: responsiveValues['textFieldHeight']!,
+                  ),
+                  SizedBox(height: responsiveValues['verticalSpacing']! * 2),
+                  CustomButton(
+                    text: 'Register',
+                    onPressed: () {
+                      _signupController.signUp();
+                    },
+                    height: responsiveValues['buttonHeight']!,
+                  ),
+                  SizedBox(height: responsiveValues['verticalSpacing']! * 2),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Don\'t have an account?',
                         style: TextStyle(
-                          color: mainColor,
+                          color: Colors.grey,
                           fontSize: MediaQuery.of(context).size.width * 0.04,
-                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                      SizedBox(
+                          width: responsiveValues['horizontalSpacing']! * 0.5),
+                      GestureDetector(
+                        onTap: () {
+                          Get.to(() => LoginView());
+                        },
+                        child: Text(
+                          'Sign In',
+                          style: TextStyle(
+                            color: mainColor,
+                            fontSize: MediaQuery.of(context).size.width * 0.04,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
