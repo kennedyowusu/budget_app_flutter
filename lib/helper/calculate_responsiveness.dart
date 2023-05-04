@@ -7,6 +7,8 @@ Map<String, double> calculateResponsiveValues(BuildContext context) {
   final double titleFontSize = screenSize.width * 0.06;
   final double textFieldHeight = screenSize.height * 0.07;
   final double buttonHeight = screenSize.height * 0.08;
+  final double bottomSheetHeight = screenSize.height * 0.09;
+  final double containerHeight = screenSize.height * 0.10;
 
   return {
     'verticalSpacing': verticalSpacing,
@@ -14,5 +16,7 @@ Map<String, double> calculateResponsiveValues(BuildContext context) {
     'titleFontSize': titleFontSize,
     'textFieldHeight': textFieldHeight,
     'buttonHeight': buttonHeight,
+    'bottomSheetHeight': bottomSheetHeight,
+    'containerHeight': containerHeight,
   };
 }
