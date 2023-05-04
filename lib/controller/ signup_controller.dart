@@ -1,9 +1,16 @@
+import 'package:budget_app_flutter/services/auth/register.dart';
+import 'package:budget_app_flutter/view/home/home.dart';
 import 'package:budget_app_flutter/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class SignupController extends GetxController {
   final GlobalKey<FormState> signupFormKey = GlobalKey<FormState>();
+  final RegisterService _signupService = RegisterService();
+
+  final RxBool isLoading = false.obs;
+  final RxBool isPasswordVisible = false.obs;
+  final RxBool isConfirmPasswordVisible = false.obs;
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -59,9 +66,9 @@ class SignupController extends GetxController {
     if (value.length > 50) {
       return 'Name must not exceed 50 characters';
     }
-    if (!GetUtils.isAlphabetOnly(value)) {
-      return 'Name must contain only alphabets';
-    }
+    // if (!GetUtils.isAlphabetOnly(value)) {
+    //   return 'Name must contain only alphabets';
+    // }
     if (GetUtils.isNumericOnly(value)) {
       return 'Name must not contain numbers';
     }
@@ -109,6 +116,32 @@ class SignupController extends GetxController {
 
     if (signupFormKey.currentState!.validate() && isFormValid()) {
       // Implement your sign up logic here
+      try {
+        isLoading.value = true;
+
+        final String name = nameController.text.trim();
+        final String email = emailController.text.trim();
+        final String password = passwordController.text.trim();
+        final String confirmPassword = confirmPasswordController.text.trim();
+
+        _signupService.register(name, email, password, confirmPassword);
+
+        Get.offAll(
+          () => HomeView(),
+        );
+
+        nameController.clear();
+        emailController.clear();
+        passwordController.clear();
+        confirmPasswordController.clear();
+
+        isLoading.value = false;
+      } catch (e) {
+        isLoading.value = false;
+        ToastWidget.showToast(e.toString());
+      } finally {
+        isLoading.value = false;
+      }
       debugPrint(
         'Signing up with name: $name, email: $email, password: $password, confirmPassword: $confirmPassword',
       );

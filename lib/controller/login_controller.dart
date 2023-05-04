@@ -1,10 +1,15 @@
+import 'package:budget_app_flutter/services/auth/login.dart';
+import 'package:budget_app_flutter/view/home/home.dart';
 import 'package:budget_app_flutter/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class LoginController extends GetxController {
+  final LoginService _loginService = LoginService();
   final RxString email = ''.obs;
   final RxString password = ''.obs;
+
+  final RxBool isLoading = false.obs;
 
   final GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
 
@@ -37,14 +42,41 @@ class LoginController extends GetxController {
     return email.isNotEmpty && password.isNotEmpty;
   }
 
-  void login() {
+  Future<void> login() async {
     if (loginFormKey.currentState!.validate() && isFormValid()) {
-      // Implement your login logic here
-      debugPrint('Logging in with username: $email, password: $password');
+      try {
+        isLoading.value = true;
 
-      // Clear input fields after successful login
-      emailController.clear();
-      passwordController.clear();
+        final email = emailController.text.trim();
+        final password = passwordController.text.trim();
+
+        final response = await _loginService.login(email, password);
+
+        debugPrint("$response");
+
+        // Handle successful login, e.g., navigate to home screen
+        // or perform additional logic based on the response
+        Get.offAll(
+          () => HomeView(),
+        );
+        debugPrint(
+          "Login successful: Email is $email, $password",
+        );
+
+        // Clear email and password fields after successful login
+
+        emailController.clear();
+        passwordController.clear();
+
+        isLoading.value = false;
+      } catch (e) {
+        // Handle login failure, e.g., display error message
+        isLoading.value = false;
+        ToastWidget.showToast(e.toString());
+        debugPrint('Login failed: $e');
+      } finally {
+        isLoading.value = false;
+      }
     } else {
       ToastWidget.showToast('Please enter valid credentials');
     }
