@@ -1,4 +1,5 @@
 import 'package:budget_app_flutter/constants/colors.dart';
+import 'package:budget_app_flutter/controller/transaction_controller.dart';
 import 'package:budget_app_flutter/helper/calculate_responsiveness.dart';
 import 'package:budget_app_flutter/widgets/custom_appbar.dart';
 import 'package:budget_app_flutter/widgets/custom_button.dart';
@@ -8,6 +9,7 @@ import 'package:budget_app_flutter/widgets/custom_text_field.dart';
 import 'package:budget_app_flutter/widgets/custom_widget.dart';
 import 'package:budget_app_flutter/widgets/list_of_categories.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class NewFormView extends StatelessWidget {
   final String title;
@@ -16,7 +18,7 @@ class NewFormView extends StatelessWidget {
   final String backText;
   final VoidCallback onBack;
 
-  const NewFormView({
+  NewFormView({
     super.key,
     required this.title,
     required this.buttonText,
@@ -24,6 +26,9 @@ class NewFormView extends StatelessWidget {
     required this.backText,
     required this.onBack,
   });
+
+  final TransactionController transactionController =
+      Get.put(TransactionController());
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +38,9 @@ class NewFormView extends StatelessWidget {
           fontSize: responsiveValues['titleFontSize']! - 3.0,
           fontWeight: FontWeight.bold,
         );
+
+    String currentRoute = Get.currentRoute;
+    debugPrint("Current route is $currentRoute");
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -68,33 +76,42 @@ class NewFormView extends StatelessWidget {
                     CustomTextField(
                       labelText: 'Transaction Icon Link',
                     ),
+                    Obx(() {
+                      if (transactionController.currentRoute.value ==
+                          '/new-transaction') {
+                        return Column(
+                          children: [
+                            SizedBox(height: 16.0),
+                            Text(
+                              'Select Category',
+                              style: bodyStyle,
+                            ),
+                            SizedBox(height: 16.0),
+                            Container(
+                              height:
+                                  responsiveValues['verticalSpacing']! * 2.5,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: backgroundColor,
+                                border: Border.all(
+                                  color: Colors.grey.shade500,
+                                  width: 1.5,
+                                ),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10.0),
+                                ),
+                              ),
+                              child: Center(
+                                child: CategoryListWidget(),
+                              ),
+                            ),
+                          ],
+                        );
+                      } else {
+                        return SizedBox.shrink();
+                      }
+                    }),
                     SizedBox(height: 16.0),
-                    Text(
-                      textAlign: TextAlign.start,
-                      'Select Category',
-                      style: bodyStyle,
-                    ),
-                    SizedBox(height: 16.0),
-                    Container(
-                      height: responsiveValues['verticalSpacing']! * 2.5,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: backgroundColor,
-                        border: Border.all(
-                          color: Colors.grey.shade500,
-                          width: 1.5,
-                        ),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10.0),
-                        ),
-                      ),
-                      child: Center(
-                        child: CategoryListWidget(),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 16.0,
-                    ),
                     CustomButton(
                       text: buttonText,
                       onPressed: onPressed,
