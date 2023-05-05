@@ -34,7 +34,7 @@ class LoginService {
     } catch (e) {
       throw Exception(e.toString());
     } finally {
-      print("Login service called");
+      print("Login failed");
     }
   }
 }
