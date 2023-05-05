@@ -1,9 +1,11 @@
 import 'package:budget_app_flutter/constants/colors.dart';
+import 'package:budget_app_flutter/controller/category_list.dart';
 import 'package:budget_app_flutter/controller/transaction_controller.dart';
 import 'package:budget_app_flutter/helper/calculate_responsiveness.dart';
 import 'package:budget_app_flutter/widgets/custom_appbar.dart';
 import 'package:budget_app_flutter/widgets/custom_button.dart';
 import 'package:budget_app_flutter/widgets/custom_button_sheet.dart';
+import 'package:budget_app_flutter/widgets/custom_loader.dart';
 import 'package:budget_app_flutter/widgets/custom_radius.dart';
 import 'package:budget_app_flutter/widgets/custom_text_field.dart';
 import 'package:budget_app_flutter/widgets/custom_widget.dart';
@@ -29,6 +31,8 @@ class NewFormView extends StatelessWidget {
 
   final TransactionController transactionController =
       Get.put(TransactionController());
+  final CategoryListController categoryController =
+      Get.put(CategoryListController());
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +43,12 @@ class NewFormView extends StatelessWidget {
           fontWeight: FontWeight.bold,
         );
 
-    String currentRoute = Get.currentRoute;
+    final String currentRoute = transactionController.currentRoute.value;
+    final GlobalKey<FormState> formKey = currentRoute == '/new-transaction'
+        ? transactionController.transactionFormKey
+        : categoryController.categoryFormKey;
+
+    // String currentRoute = Get.currentRoute;
     debugPrint("Current route is $currentRoute");
 
     return Scaffold(
@@ -61,63 +70,129 @@ class NewFormView extends StatelessWidget {
             SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.all(responsiveValues['horizontalSpacing']!),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(height: responsiveValues['verticalSpacing']!),
-                    LogoContainer(
-                      radius: 50.0,
-                    ),
-                    SizedBox(height: responsiveValues['verticalSpacing']! * 5),
-                    CustomTextField(
-                      labelText: 'Transaction Name',
-                    ),
-                    SizedBox(height: 16.0),
-                    CustomTextField(
-                      labelText: 'Transaction Icon Link',
-                    ),
-                    Obx(() {
-                      if (transactionController.currentRoute.value ==
-                          '/new-transaction') {
-                        return Column(
-                          children: [
-                            SizedBox(height: 16.0),
-                            Text(
-                              'Select Category',
-                              style: bodyStyle,
-                            ),
-                            SizedBox(height: 16.0),
-                            Container(
-                              height:
-                                  responsiveValues['verticalSpacing']! * 2.5,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: backgroundColor,
-                                border: Border.all(
-                                  color: Colors.grey.shade500,
-                                  width: 1.5,
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(height: responsiveValues['verticalSpacing']!),
+                      LogoContainer(
+                        radius: 50.0,
+                      ),
+                      SizedBox(
+                          height: responsiveValues['verticalSpacing']! * 5),
+                      CustomTextField(
+                        labelText: transactionController.currentRoute.value ==
+                                '/new-transaction'
+                            ? 'Transaction Name'
+                            : 'Category Name',
+                        controller: transactionController.currentRoute.value ==
+                                '/new-transaction'
+                            ? transactionController.transactionNameController
+                            : categoryController.categoryNameController,
+                        validator: (value) => transactionController
+                                    .currentRoute.value ==
+                                '/new-transaction'
+                            ? transactionController
+                                .validateTransactionName(value)
+                            : categoryController.validateCategoryName(value),
+                        onChanged: (value) => transactionController
+                                    .currentRoute.value ==
+                                '/new-transaction'
+                            ? transactionController.setTransactionName(value)
+                            : categoryController.setCategoryName(value),
+                      ),
+                      SizedBox(height: 16.0),
+                      CustomTextField(
+                        labelText: transactionController.currentRoute.value ==
+                                '/new-transaction'
+                            ? 'Transaction Icon Link'
+                            : 'Category Icon Link',
+                        controller: transactionController.currentRoute.value ==
+                                '/new-transaction'
+                            ? transactionController.transactionIconController
+                            : categoryController.categoryIconController,
+                        validator: (value) =>
+                            transactionController.currentRoute.value ==
+                                    '/new-transaction'
+                                ? transactionController
+                                    .validateTransactionIconLink(value)
+                                : categoryController
+                                    .validateCategoryIconLink(value),
+                        onChanged: (value) =>
+                            transactionController.currentRoute.value ==
+                                    '/new-transaction'
+                                ? transactionController
+                                    .setTransactionIconLink(value)
+                                : categoryController.setCategoryIconLink(value),
+                      ),
+                      Obx(() {
+                        if (transactionController.currentRoute.value ==
+                            '/new-transaction') {
+                          return Column(
+                            children: [
+                              SizedBox(height: 16.0),
+                              Text(
+                                'Select Category',
+                                style: bodyStyle,
+                              ),
+                              SizedBox(height: 16.0),
+                              Container(
+                                height:
+                                    responsiveValues['verticalSpacing']! * 2.5,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: backgroundColor,
+                                  border: Border.all(
+                                    color: Colors.grey.shade500,
+                                    width: 1.5,
+                                  ),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10.0),
+                                  ),
                                 ),
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10.0),
+                                child: Center(
+                                  child: CategoryListWidget(),
                                 ),
                               ),
-                              child: Center(
-                                child: CategoryListWidget(),
+                            ],
+                          );
+                        } else {
+                          return SizedBox.shrink();
+                        }
+                      }),
+                      SizedBox(height: 16.0),
+                      Obx(
+                        () => transactionController.isLoading.value
+                            ? LoadingWidget()
+                            : CustomButton(
+                                text: buttonText,
+                                onPressed: () {
+                                  // transactionController.saveTransaction()
+                                  transactionController.currentRoute.value ==
+                                          '/new-transaction'
+                                      ? debugPrint("Transaction")
+                                      : debugPrint("Category");
+
+                                  transactionController.currentRoute.value ==
+                                          '/new-transaction'
+                                      ? transactionController.saveTransaction()
+                                      : categoryController.saveCategory();
+                                },
+                                height: responsiveValues['buttonHeight']!,
                               ),
-                            ),
-                          ],
-                        );
-                      } else {
-                        return SizedBox.shrink();
-                      }
-                    }),
-                    SizedBox(height: 16.0),
-                    CustomButton(
-                      text: buttonText,
-                      onPressed: onPressed,
-                      height: responsiveValues['buttonHeight']!,
-                    ),
-                  ],
+                      ),
+
+                      // CustomButton(
+                      //   text: buttonText,
+                      //   onPressed: () {
+                      //     debugPrint("transaction");
+                      //     // transactionController.saveTransaction()
+                      //   },
+                      //   height: responsiveValues['buttonHeight']!,
+                      // ),
+                    ],
+                  ),
                 ),
               ),
             ),

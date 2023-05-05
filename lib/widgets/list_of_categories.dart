@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 class CategoryListWidget extends StatelessWidget {
   CategoryListWidget({super.key});
 
-  final CategoryList categoryList = Get.put(CategoryList());
+  final CategoryListController categoryList = Get.put(CategoryListController());
 
   @override
   Widget build(BuildContext context) {

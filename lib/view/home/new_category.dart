@@ -1,11 +1,16 @@
+import 'package:budget_app_flutter/controller/category_list.dart';
 import 'package:budget_app_flutter/view/home/home.dart';
-import 'package:budget_app_flutter/view/transaction/transaction.dart';
 import 'package:budget_app_flutter/widgets/new_form_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class NewCategoryView extends StatelessWidget {
-  const NewCategoryView({super.key});
+  NewCategoryView({super.key});
+
+  final GlobalKey<FormState> categoryFormKey = GlobalKey<FormState>();
+
+  final CategoryListController categoryController =
+      Get.put(CategoryListController());
 
   @override
   Widget build(BuildContext context) {
@@ -16,23 +21,6 @@ class NewCategoryView extends StatelessWidget {
       backText: "Back Categories",
       onBack: () {
         Get.to(() => HomeView());
-      },
-    );
-  }
-}
-
-class NewTransactionView extends StatelessWidget {
-  const NewTransactionView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return NewFormView(
-      title: "New Transaction",
-      buttonText: "Create Transaction",
-      onPressed: () {},
-      backText: "Back Transaction",
-      onBack: () {
-        Get.to(() => TransactionView());
       },
     );
   }
