@@ -106,17 +106,17 @@ class NewFormView extends StatelessWidget {
                       CustomTextField(
                         labelText: transactionController.currentRoute.value ==
                                 '/new-transaction'
-                            ? 'Transaction Icon Link'
+                            ? 'Transaction Price'
                             : 'Category Icon Link',
                         controller: transactionController.currentRoute.value ==
                                 '/new-transaction'
-                            ? transactionController.transactionIconController
+                            ? transactionController.transactionPriceController
                             : categoryController.categoryIconController,
                         validator: (value) =>
                             transactionController.currentRoute.value ==
                                     '/new-transaction'
                                 ? transactionController
-                                    .validateTransactionIconLink(value)
+                                    .validateTransactionPrice(value)
                                 : categoryController
                                     .validateCategoryIconLink(value),
                         onChanged: (value) =>
@@ -168,7 +168,6 @@ class NewFormView extends StatelessWidget {
                             : CustomButton(
                                 text: buttonText,
                                 onPressed: () {
-                                  // transactionController.saveTransaction()
                                   transactionController.currentRoute.value ==
                                           '/new-transaction'
                                       ? debugPrint("Transaction")
@@ -182,15 +181,6 @@ class NewFormView extends StatelessWidget {
                                 height: responsiveValues['buttonHeight']!,
                               ),
                       ),
-
-                      // CustomButton(
-                      //   text: buttonText,
-                      //   onPressed: () {
-                      //     debugPrint("transaction");
-                      //     // transactionController.saveTransaction()
-                      //   },
-                      //   height: responsiveValues['buttonHeight']!,
-                      // ),
                     ],
                   ),
                 ),
