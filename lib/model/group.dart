@@ -24,19 +24,19 @@ class GroupModelResponse {
 }
 
 class GroupModel {
-  int id;
+  int? id;
   String name;
   String icon;
-  String description;
-  int isActive;
+  String? description;
+  int? isActive;
   int userId;
 
   GroupModel({
-    required this.id,
+    this.id,
     required this.name,
     required this.icon,
-    required this.description,
-    required this.isActive,
+    this.description,
+    this.isActive,
     required this.userId,
   });
 

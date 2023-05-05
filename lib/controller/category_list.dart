@@ -1,9 +1,13 @@
+import 'package:budget_app_flutter/controller/profile_controller.dart';
+import 'package:budget_app_flutter/services/category/category.dart';
 import 'package:budget_app_flutter/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CategoryListController extends GetxController {
   CategoryListController();
+  final CategoryService categoryService = CategoryService();
+  final ProfileController profileController = ProfileController();
 
   final RxBool isLoading = false.obs;
   final RxString selectedCategory = 'Option 1'.obs;
@@ -74,7 +78,9 @@ class CategoryListController extends GetxController {
     return null;
   }
 
-  Future<void> saveCategory() async {
+  Future<void> saveCategory(
+    int id,
+  ) async {
     if (categoryFormKey.currentState!.validate() && isFormValid()) {
       try {
         isLoading(true);
@@ -82,11 +88,31 @@ class CategoryListController extends GetxController {
         final String categoryName = categoryNameController.text.trim();
         final String categoryIcon = categoryIconController.text.trim();
 
-        debugPrint("Category data are: $categoryName && $categoryIcon");
+        final response = await categoryService.createCategory(
+          categoryName,
+          categoryIcon,
+          id,
+        );
+
+        debugPrint(
+          'Category Response: $response',
+        );
+
+        debugPrint(
+          'Category Response: ${response.data}',
+        );
+
+        debugPrint(
+          "Category data are: $categoryName && $categoryIcon, $id",
+        );
+
+        categoryNameController.clear();
+        categoryIconController.clear();
       } catch (e) {
         isLoading.value = false;
-        ToastWidget.showToast(e.toString());
+        ToastWidget.showToast('Error creating category');
         debugPrint('Transaction not sent: $e');
+        debugPrint('Response Code: $e');
       } finally {
         isLoading.value = false;
       }

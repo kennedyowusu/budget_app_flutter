@@ -67,8 +67,6 @@ class LoginController extends GetxController {
 
         emailController.clear();
         passwordController.clear();
-
-        isLoading.value = false;
       } catch (e) {
         // Handle login failure, e.g., display error message
         isLoading.value = false;

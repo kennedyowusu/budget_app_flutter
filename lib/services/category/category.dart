@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:budget_app_flutter/model/group.dart';
@@ -37,7 +38,45 @@ class CategoryService {
       debugPrint("$e");
       throw Exception(e.toString());
     } finally {
-      print("fetching group failed");
+      debugPrint("fetching group failed");
+    }
+  }
+
+  Future<GroupModelResponse> createCategory(
+      String categoryName, String categoryIconLink, int userId) async {
+    try {
+      final Map<String, dynamic> categoryData = {
+        'name': categoryName,
+        'icon': categoryIconLink,
+        'user_id': userId,
+      };
+
+      final token = GetStorage().read('loginResponse');
+      final response = await http.post(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token'
+        },
+        body: json.encode(categoryData),
+      );
+
+      if (response.statusCode == 200) {
+        final GroupModelResponse groupModelResponse =
+            groupModelFromJson(response.body);
+
+        GetStorage().write("category", groupModelResponse.data);
+        return groupModelResponse;
+      } else {
+        throw Exception("Failed to create Category");
+      }
+    } on SocketException {
+      throw Exception("No internet connection");
+    } catch (e) {
+      throw Exception(e.toString());
+    } finally {
+      debugPrint('Failed to create a User\'s Category');
     }
   }
 }
