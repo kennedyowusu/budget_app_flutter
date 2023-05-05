@@ -15,8 +15,10 @@ class CategoryListWidget extends StatelessWidget {
         child: DropdownButton<String>(
           isExpanded: true,
           value: categoryList.selectedCategory.value,
+          hint: Text("Select Category for Transaction"),
           onChanged: (newValue) {
             categoryList.toggleSelectedCategory(newValue!);
+            printSelectedValue(newValue);
           },
           items: <String>['Option 1', 'Option 2', 'Option 3', 'Option 4']
               .map((String value) {
@@ -34,5 +36,10 @@ class CategoryListWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void printSelectedValue(String value) {
+    // print('Selected value: $value');
+    // You can perform any additional actions with the selected value here
   }
 }

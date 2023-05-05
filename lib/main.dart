@@ -62,6 +62,7 @@ class _BudgetAppState extends State<BudgetApp> {
             GetPage(name: '/', page: () => HomeView()),
             GetPage(name: '/login', page: () => LoginView()),
             GetPage(name: '/new-category', page: () => NewCategoryView()),
+            GetPage(name: '/category', page: () => NewCategoryView()),
             GetPage(name: '/new-transaction', page: () => NewTransactionView()),
             GetPage(name: '/transaction', page: () => TransactionView()),
           ],
