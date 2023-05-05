@@ -6,6 +6,7 @@ import 'package:budget_app_flutter/widgets/custom_button_sheet.dart';
 import 'package:budget_app_flutter/widgets/custom_radius.dart';
 import 'package:budget_app_flutter/widgets/custom_text_field.dart';
 import 'package:budget_app_flutter/widgets/custom_widget.dart';
+import 'package:budget_app_flutter/widgets/list_of_categories.dart';
 import 'package:flutter/material.dart';
 
 class NewFormView extends StatelessWidget {
@@ -68,6 +69,32 @@ class NewFormView extends StatelessWidget {
                       labelText: 'Transaction Icon Link',
                     ),
                     SizedBox(height: 16.0),
+                    Text(
+                      textAlign: TextAlign.start,
+                      'Select Category',
+                      style: bodyStyle,
+                    ),
+                    SizedBox(height: 16.0),
+                    Container(
+                      height: responsiveValues['verticalSpacing']! * 2.5,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: backgroundColor,
+                        border: Border.all(
+                          color: Colors.grey.shade500,
+                          width: 1.5,
+                        ),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10.0),
+                        ),
+                      ),
+                      child: Center(
+                        child: CategoryListWidget(),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 16.0,
+                    ),
                     CustomButton(
                       text: buttonText,
                       onPressed: onPressed,
