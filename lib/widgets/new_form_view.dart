@@ -1,5 +1,6 @@
 import 'package:budget_app_flutter/constants/colors.dart';
 import 'package:budget_app_flutter/controller/category_list.dart';
+import 'package:budget_app_flutter/controller/profile_controller.dart';
 import 'package:budget_app_flutter/controller/transaction_controller.dart';
 import 'package:budget_app_flutter/helper/calculate_responsiveness.dart';
 import 'package:budget_app_flutter/widgets/custom_appbar.dart';
@@ -34,6 +35,8 @@ class NewFormView extends StatelessWidget {
   final CategoryListController categoryController =
       Get.put(CategoryListController());
 
+  final ProfileController profileController = Get.put(ProfileController());
+
   @override
   Widget build(BuildContext context) {
     final responsiveValues = calculateResponsiveValues(context);
@@ -50,6 +53,9 @@ class NewFormView extends StatelessWidget {
 
     // String currentRoute = Get.currentRoute;
     debugPrint("Current route is $currentRoute");
+
+    final userId = profileController.userProfileModel.value.id;
+    debugPrint("User Id from the Form UI: $userId");
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -176,7 +182,10 @@ class NewFormView extends StatelessWidget {
                                   transactionController.currentRoute.value ==
                                           '/new-transaction'
                                       ? transactionController.saveTransaction()
-                                      : categoryController.saveCategory();
+                                      : categoryController.saveCategory(
+                                          profileController
+                                              .userProfileModel.value.id!,
+                                        );
                                 },
                                 height: responsiveValues['buttonHeight']!,
                               ),
