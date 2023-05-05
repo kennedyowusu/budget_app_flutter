@@ -1,4 +1,5 @@
 import 'package:budget_app_flutter/constants/colors.dart';
+import 'package:budget_app_flutter/controller/category_controller.dart';
 import 'package:budget_app_flutter/data/categories.dart';
 import 'package:budget_app_flutter/helper/calculate_responsiveness.dart';
 import 'package:budget_app_flutter/view/home/new_category.dart';
@@ -16,6 +17,8 @@ class HomeView extends StatelessWidget {
 
   final GetStorage box = GetStorage();
 
+  final CategoryController categoryController = Get.put(CategoryController());
+
   @override
   Widget build(BuildContext context) {
     final responsiveValues = calculateResponsiveValues(context);
@@ -23,6 +26,10 @@ class HomeView extends StatelessWidget {
           color: Colors.white,
           fontWeight: FontWeight.bold,
         );
+
+    debugPrint(
+      "A User's Categories are: ${categoryController.groupModel.length}",
+    );
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: backgroundColor,
@@ -49,7 +56,7 @@ class HomeView extends StatelessWidget {
                   SizedBox(height: responsiveValues['verticalSpacing']!),
                   Expanded(
                     child: ListView.separated(
-                      itemCount: categories.length,
+                      itemCount: categoryController.groupModel.length,
                       shrinkWrap: true,
                       separatorBuilder: (context, index) => Divider(),
                       itemBuilder: (BuildContext context, int index) =>
@@ -62,10 +69,12 @@ class HomeView extends StatelessWidget {
                         child: Center(
                           child: ListTile(
                             onTap: () {
-                              debugPrint(categories[index]['name']);
+                              debugPrint(
+                                  categoryController.groupModel[index].name);
                               Get.to(
                                 () => TransactionView(
-                                  categories: categories[index]['name'],
+                                  categories:
+                                      categoryController.groupModel[index].name,
                                 ),
                               );
                             },
@@ -74,10 +83,12 @@ class HomeView extends StatelessWidget {
                             ),
 
                             // leading: Icon(categories[index]['icon']),
-                            title: Text(categories[index]['name']),
-                            subtitle: Text(categories[index]['date']),
+                            title:
+                                Text(categoryController.groupModel[index].name),
+                            // subtitle: Text(categoryController.groupModel[index].name),
                             trailing: Text(
-                              categories[index]['price'],
+                              categoryController.groupModel[index].id
+                                  .toString(),
                               style: TextStyle(
                                 color: mainColor,
                                 fontWeight: FontWeight.bold,
