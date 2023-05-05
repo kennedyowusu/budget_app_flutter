@@ -6,6 +6,8 @@ class APIEndpoint {
   static const String REGISTER_URL = '${BASE_URL}register';
   static const String LOGOUT_URL = '${BASE_URL}logout';
 
+  static const String CATEGORY_URL = "${BASE_URL}groups";
+
   static const String USER_PROFILE_URL = '${BASE_URL}profile';
 
   static const Map<String, String> HEADERS = {
