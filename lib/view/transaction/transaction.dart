@@ -1,6 +1,7 @@
 import 'package:budget_app_flutter/constants/colors.dart';
+import 'package:budget_app_flutter/controller/transaction_controller.dart';
 import 'package:budget_app_flutter/helper/calculate_responsiveness.dart';
-import 'package:budget_app_flutter/view/home/new_category.dart';
+import 'package:budget_app_flutter/view/transaction/new_transaction.dart';
 import 'package:budget_app_flutter/widgets/custom_appbar.dart';
 import 'package:budget_app_flutter/widgets/custom_button_sheet.dart';
 import 'package:budget_app_flutter/widgets/custom_widget.dart';
@@ -12,6 +13,9 @@ class TransactionView extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final categories;
+
+  final TransactionController transactionController =
+      Get.put(TransactionController());
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +91,7 @@ class TransactionView extends StatelessWidget {
                         child: Center(
                           child: ListTile(
                             onTap: () {
-                              debugPrint(categories[index]['name']);
+                              // debugPrint(categories[index]['name']);
                             },
                             // leading: CircleAvatar(
                             //   backgroundColor: Colors.white,
@@ -118,9 +122,9 @@ class TransactionView extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                Get.to(
-                  () => NewTransactionView(),
-                );
+                // Get.toNamed('/new-transaction');
+                Get.to(() => NewTransactionView());
+                transactionController.setCurrentRoute('/new-transaction');
               },
               child: CustomBottomSheet(
                 titleStyle: titleStyle,
