@@ -6,7 +6,7 @@ GroupModelResponse groupModelFromJson(String str) =>
 String groupModelToJson(GroupModelResponse data) => json.encode(data.toJson());
 
 class GroupModelResponse {
-  List<Datum> data;
+  List<GroupModel> data;
 
   GroupModelResponse({
     required this.data,
@@ -14,7 +14,8 @@ class GroupModelResponse {
 
   factory GroupModelResponse.fromJson(Map<String, dynamic> json) =>
       GroupModelResponse(
-        data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+        data: List<GroupModel>.from(
+            json["data"].map((x) => GroupModel.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -22,7 +23,7 @@ class GroupModelResponse {
       };
 }
 
-class Datum {
+class GroupModel {
   int id;
   String name;
   String icon;
@@ -30,7 +31,7 @@ class Datum {
   int isActive;
   int userId;
 
-  Datum({
+  GroupModel({
     required this.id,
     required this.name,
     required this.icon,
@@ -39,7 +40,7 @@ class Datum {
     required this.userId,
   });
 
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+  factory GroupModel.fromJson(Map<String, dynamic> json) => GroupModel(
         id: json["id"],
         name: json["name"],
         icon: json["icon"],
