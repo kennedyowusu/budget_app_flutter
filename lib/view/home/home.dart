@@ -130,7 +130,10 @@ class HomeView extends StatelessWidget {
                                                 .groupModel[index].name);
                                             Get.to(
                                               () => TransactionView(
-                                                categories: categoryController
+                                                // categories: categoryController
+                                                // .groupModel[index].name,
+
+                                                categoryName: categoryController
                                                     .groupModel[index].name,
                                               ),
                                             );

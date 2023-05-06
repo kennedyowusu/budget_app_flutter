@@ -9,10 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class TransactionView extends StatelessWidget {
-  TransactionView({super.key, this.categories});
+  TransactionView({super.key, this.categoryName});
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  final categories;
+  final String? categoryName;
 
   final TransactionController transactionController =
       Get.put(TransactionController());
@@ -67,7 +67,7 @@ class TransactionView extends StatelessWidget {
                           width: 40,
                         ),
                         title: Text(
-                          'name',
+                          categoryName!,
                         ),
                         trailing: Text(
                           'amount',
