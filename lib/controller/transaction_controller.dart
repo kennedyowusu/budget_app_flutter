@@ -1,9 +1,13 @@
 import 'package:budget_app_flutter/controller/category_list.dart';
+import 'package:budget_app_flutter/model/transaction.dart';
+import 'package:budget_app_flutter/services/transactions/transacton.dart';
 import 'package:budget_app_flutter/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class TransactionController extends GetxController {
+  final TransactionService transactionService = TransactionService();
+  final RxList<TransactionModel> transactionModel = <TransactionModel>[].obs;
   final RxString currentRoute = ''.obs;
 
   final GlobalKey<FormState> transactionFormKey = GlobalKey<FormState>();
@@ -12,19 +16,25 @@ class TransactionController extends GetxController {
 
   final RxBool isLoading = false.obs;
   final RxString transactionName = "".obs;
-  final RxString transactionIconLink = "".obs;
+  final RxString transactionAmount = "".obs;
 
   TextEditingController transactionNameController = TextEditingController();
-  TextEditingController transactionPriceController = TextEditingController();
+  TextEditingController transactionAmountController = TextEditingController();
 
   void setCurrentRoute(String route) {
     currentRoute.value = route;
   }
 
   @override
+  void onInit() {
+    fetchTransaction();
+    super.onInit();
+  }
+
+  @override
   void onClose() {
     transactionNameController.dispose();
-    transactionPriceController.dispose();
+    transactionAmountController.dispose();
     super.onClose();
   }
 
@@ -32,13 +42,13 @@ class TransactionController extends GetxController {
     transactionName.value = value;
   }
 
-  void setTransactionIconLink(String value) {
-    transactionIconLink.value = value;
+  void setTransactionAmount(String value) {
+    transactionAmount.value = value;
   }
 
   bool isFormValid() {
     return transactionName.value.isNotEmpty &&
-        transactionIconLink.value.isNotEmpty;
+        transactionAmount.value.isNotEmpty;
   }
 
   String? validateTransactionName(String? value) {
@@ -82,27 +92,82 @@ class TransactionController extends GetxController {
     return null;
   }
 
-
-  Future<void> saveTransaction() async {
+  Future<void> saveTransaction(
+    int id,
+  ) async {
     if (transactionFormKey.currentState!.validate() && isFormValid()) {
       try {
         isLoading(true);
 
         final String transactionName = transactionNameController.text.trim();
-        final String transactionIcon = transactionPriceController.text.trim();
+        final String transactionAmount =
+            transactionAmountController.text.trim();
         final String selectedCategory = categoryList.selectedCategory.value;
 
-        debugPrint("Trans data are: $transactionName && $transactionIcon");
+        final response = await transactionService.createTransaction(
+            transactionName, transactionAmount, id);
+
+        debugPrint(
+          'Category Response: ${response.data.toString()}',
+        );
+
+        debugPrint(
+          'Category Response: ${response.data}',
+        );
+
+        resetTransactionForm();
+
+        debugPrint("Trans data are: $transactionName && $transactionAmount");
         debugPrint("Selected category: $selectedCategory");
       } catch (e) {
         isLoading.value = false;
         ToastWidget.showToast(e.toString());
-        debugPrint('Transaction not sent: $e');
+        debugPrint('Transaction not Created: $e');
       } finally {
         isLoading.value = false;
       }
     } else {
       ToastWidget.showToast('Please enter valid transaction credentials');
+    }
+  }
+
+  void resetTransactionForm() {
+    transactionNameController.clear();
+    transactionAmountController.clear();
+    categoryList.resetSelectedCategory();
+  }
+
+  Future<void> fetchTransaction() async {
+    try {
+      isLoading(true);
+      TransactionModelResponse transactionResponse =
+          await transactionService.getTransactions();
+      transactionModel.assignAll(transactionResponse.data);
+      debugPrint("Fetch transaction ${transactionResponse.data}");
+      debugPrint(
+        "Total Transactions for this User: ${transactionModel.length}",
+      );
+    } catch (e) {
+      isLoading.value = false;
+      ToastWidget.showToast(e.toString());
+      debugPrint('Transaction not fetched: $e');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future deleteUserTransaction(int id) async {
+    try {
+      isLoading(true);
+
+      await transactionService.deleteTransaction(id);
+      debugPrint("Delete transaction");
+    } catch (e) {
+      isLoading.value = false;
+      // ToastWidget.showToast(e.toString());
+      debugPrint('Transaction not deleted: $e');
+    } finally {
+      isLoading.value = false;
     }
   }
 }
