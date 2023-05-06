@@ -119,4 +119,17 @@ class CategoryListController extends GetxController {
       ToastWidget.showToast('Please enter valid category credentials');
     }
   }
+
+  Future<void> deleteUserCategoryItem(int id) async {
+    try {
+      isLoading(true);
+      await categoryService.deleteUserCategory(id);
+      debugPrint('Category Response');
+    } on Exception catch (e) {
+      ToastWidget.showToast(e.toString());
+      debugPrint('Transaction not sent: $e');
+    } finally {
+      isLoading(false);
+    }
+  }
 }
