@@ -30,6 +30,7 @@ class RegisterService {
         final RegisterResponse registerResponse =
             registerModelFromJson(response.body);
         GetStorage().write("registerResponse", registerResponse);
+        GetStorage().write("userId", registerResponse.userId);
         return registerResponse;
       } else {
         throw Exception("Failed to register");

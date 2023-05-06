@@ -25,6 +25,7 @@ class LoginService {
       if (response.statusCode == 200) {
         final LoginResponse loginResponse = loginModelFromJson(response.body);
         GetStorage().write("loginResponse", loginResponse.accessToken);
+        GetStorage().write("userId", loginResponse.userId);
         return loginResponse;
       } else {
         throw Exception("Failed to login");
