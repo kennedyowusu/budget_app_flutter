@@ -3,6 +3,8 @@ import 'package:budget_app_flutter/controller/category_list.dart';
 import 'package:budget_app_flutter/controller/profile_controller.dart';
 import 'package:budget_app_flutter/controller/transaction_controller.dart';
 import 'package:budget_app_flutter/helper/calculate_responsiveness.dart';
+import 'package:budget_app_flutter/view/home/home.dart';
+import 'package:budget_app_flutter/view/transaction/transaction.dart';
 import 'package:budget_app_flutter/widgets/custom_appbar.dart';
 import 'package:budget_app_flutter/widgets/custom_button.dart';
 import 'package:budget_app_flutter/widgets/custom_button_sheet.dart';
@@ -186,6 +188,20 @@ class NewFormView extends StatelessWidget {
                                           profileController
                                               .userProfileModel.value.id!,
                                         );
+
+                                  transactionController.currentRoute.value ==
+                                          '/new-transaction'
+                                      ? transactionController
+                                          .transactionFormKey.currentState!
+                                          .reset()
+                                      : categoryController
+                                          .categoryFormKey.currentState!
+                                          .reset();
+
+                                  transactionController.currentRoute.value ==
+                                          '/new-transaction'
+                                      ? Get.to(() => TransactionView())
+                                      : Get.to(() => HomeView());
                                 },
                                 height: responsiveValues['buttonHeight']!,
                               ),
