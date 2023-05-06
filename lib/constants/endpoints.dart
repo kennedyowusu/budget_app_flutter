@@ -8,6 +8,8 @@ class APIEndpoint {
 
   static const String CATEGORY_URL = "${BASE_URL}groups";
   static const String TRANSACTION_URL = "${BASE_URL}expenses";
+  static const String GROUP_EXPENSES_URL =
+      "${BASE_URL}groups/{group_id}/expenses";
 
   static const String USER_PROFILE_URL = '${BASE_URL}profile';
 
