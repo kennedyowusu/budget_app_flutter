@@ -1,4 +1,5 @@
 import 'package:budget_app_flutter/controller/category_list.dart';
+import 'package:budget_app_flutter/model/group.dart';
 import 'package:budget_app_flutter/model/transaction.dart';
 import 'package:budget_app_flutter/services/transactions/transacton.dart';
 import 'package:budget_app_flutter/widgets/custom_toast.dart';
@@ -8,6 +9,7 @@ import 'package:get/get.dart';
 class TransactionController extends GetxController {
   final TransactionService transactionService = TransactionService();
   final RxList<TransactionModel> transactionModel = <TransactionModel>[].obs;
+  final RxList<GroupModel> groupModel = <GroupModel>[].obs;
   final RxString currentRoute = ''.obs;
 
   final GlobalKey<FormState> transactionFormKey = GlobalKey<FormState>();
@@ -27,7 +29,14 @@ class TransactionController extends GetxController {
 
   @override
   void onInit() {
-    fetchTransaction();
+    @override
+    void onInit() {
+      // if (groupModel.isNotEmpty) {
+      //   fetchTransaction(groupModel[0].id!);
+      // }
+      super.onInit();
+    }
+
     super.onInit();
   }
 
@@ -137,11 +146,22 @@ class TransactionController extends GetxController {
     categoryList.resetSelectedCategory();
   }
 
-  Future<void> fetchTransaction() async {
+  Future<void> fetchTransaction(int groupId) async {
     try {
-      isLoading(true);
-      TransactionModelResponse transactionResponse =
-          await transactionService.getTransactions();
+      isLoading.value = true;
+      // TransactionModelResponse transactionResponse =
+      //     await transactionService.getTransactions(groupId);
+
+      final TransactionModelResponse transactionResponse =
+          await transactionService.getTransactions(groupId);
+
+      if (transactionResponse != null && transactionResponse.data != null) {
+        transactionModel.assignAll(transactionResponse.data);
+      } else {
+        debugPrint("No transaction found");
+        transactionModel.assignAll([]);
+      }
+
       transactionModel.assignAll(transactionResponse.data);
       debugPrint("Fetch transaction ${transactionResponse.data}");
       debugPrint(

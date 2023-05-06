@@ -1,4 +1,5 @@
 import 'package:budget_app_flutter/controller/profile_controller.dart';
+import 'package:budget_app_flutter/model/group.dart';
 import 'package:budget_app_flutter/services/category/category.dart';
 import 'package:budget_app_flutter/widgets/custom_toast.dart';
 import 'package:flutter/material.dart';

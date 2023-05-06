@@ -99,8 +99,8 @@ class TransactionView extends StatelessWidget {
                               )
                             : RefreshIndicator(
                                 onRefresh: () async {
-                                  await transactionController
-                                      .fetchTransaction();
+                                  // await transactionController
+                                  //     .fetchTransaction();
                                 },
                                 child: Expanded(
                                   child: ListView.separated(
@@ -125,11 +125,14 @@ class TransactionView extends StatelessWidget {
                                         await transactionController
                                             .deleteUserTransaction(
                                           transactionController
-                                              .transactionModel[index].id!,
+                                              .transactionModel[index].id,
                                         );
 
                                         await transactionController
-                                            .fetchTransaction();
+                                            .fetchTransaction(
+                                          transactionController
+                                              .transactionModel[index].id,
+                                        );
 
                                         ToastWidget.showToast(
                                           "Transaction Deleted Successfully",

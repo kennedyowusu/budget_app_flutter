@@ -9,19 +9,21 @@ import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
 class TransactionService {
-  final Uri uri = Uri.parse(APIEndpoint.TRANSACTION_URL);
+  final Uri uri = Uri.parse(APIEndpoint.GROUP_EXPENSES_URL);
 
-  Future<TransactionModelResponse> getTransactions() async {
+  Future<TransactionModelResponse> getTransactions(int groupId) async {
     final token = GetStorage().read('loginResponse');
     final response = await http.get(
-      uri,
+      uri.replace(queryParameters: {
+        'group_id': groupId.toString(),
+      }),
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
         'Authorization': 'Bearer $token'
       },
     );
-    debugPrint("categories: $response");
+    debugPrint("transactions: $response");
     debugPrint("Token: $token");
 
     try {
@@ -29,12 +31,12 @@ class TransactionService {
         final TransactionModelResponse transactionModelResponse =
             transactionModelFromJson(response.body);
 
-        debugPrint("categories: $transactionModelResponse");
+        debugPrint("transactions: $transactionModelResponse");
 
         GetStorage().write("transactions", transactionModelResponse.data);
         return transactionModelResponse;
       } else {
-        throw Exception("Failed to Fetch Categories");
+        throw Exception("Failed to Fetch Transactions");
       }
     } on SocketException {
       throw Exception("No internet connection");
@@ -42,7 +44,7 @@ class TransactionService {
       debugPrint("$e");
       throw Exception(e.toString());
     } finally {
-      debugPrint("fetching group failed");
+      debugPrint("Fetching transactions failed");
     }
   }
 
