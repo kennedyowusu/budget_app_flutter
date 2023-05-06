@@ -65,42 +65,51 @@ class HomeView extends StatelessWidget {
                               title: "No Category",
                               description: "Please add a new category",
                             )
-                          : Expanded(
-                              child: ListView.separated(
-                                itemCount: categoryController.groupModel.length,
-                                shrinkWrap: true,
-                                separatorBuilder: (context, index) => Divider(),
-                                itemBuilder:
-                                    (BuildContext context, int index) =>
-                                        Container(
-                                  height: responsiveValues['containerHeight']!,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  child: Center(
-                                    child: ListTile(
-                                      onTap: () {
-                                        debugPrint(categoryController
-                                            .groupModel[index].name);
-                                        Get.to(
-                                          () => TransactionView(
-                                            categories: categoryController
-                                                .groupModel[index].name,
+                          : RefreshIndicator(
+                              onRefresh: () async {
+                                await categoryController.getUsersCategory();
+                              },
+                              child: Expanded(
+                                child: ListView.separated(
+                                  itemCount:
+                                      categoryController.groupModel.length,
+                                  shrinkWrap: true,
+                                  separatorBuilder: (context, index) =>
+                                      Divider(),
+                                  itemBuilder:
+                                      (BuildContext context, int index) =>
+                                          Container(
+                                    height:
+                                        responsiveValues['containerHeight']!,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    child: Center(
+                                      child: ListTile(
+                                        onTap: () {
+                                          debugPrint(categoryController
+                                              .groupModel[index].name);
+                                          Get.to(
+                                            () => TransactionView(
+                                              categories: categoryController
+                                                  .groupModel[index].name,
+                                            ),
+                                          );
+                                        },
+                                        leading: Image.network(
+                                          'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png',
+                                        ),
+                                        title: Text(categoryController
+                                            .groupModel[index].name),
+                                        trailing: Text(
+                                          categoryController
+                                              .groupModel[index].id
+                                              .toString(),
+                                          style: TextStyle(
+                                            color: mainColor,
+                                            fontWeight: FontWeight.bold,
                                           ),
-                                        );
-                                      },
-                                      leading: Image.network(
-                                        'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png',
-                                      ),
-                                      title: Text(categoryController
-                                          .groupModel[index].name),
-                                      trailing: Text(
-                                        categoryController.groupModel[index].id
-                                            .toString(),
-                                        style: TextStyle(
-                                          color: mainColor,
-                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     ),
