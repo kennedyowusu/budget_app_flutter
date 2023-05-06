@@ -1,9 +1,12 @@
 import 'package:budget_app_flutter/constants/colors.dart';
 import 'package:budget_app_flutter/controller/transaction_controller.dart';
 import 'package:budget_app_flutter/helper/calculate_responsiveness.dart';
+import 'package:budget_app_flutter/view/notFound/empty_category.dart';
 import 'package:budget_app_flutter/view/transaction/new_transaction.dart';
 import 'package:budget_app_flutter/widgets/custom_appbar.dart';
 import 'package:budget_app_flutter/widgets/custom_button_sheet.dart';
+import 'package:budget_app_flutter/widgets/custom_loader.dart';
+import 'package:budget_app_flutter/widgets/custom_toast.dart';
 import 'package:budget_app_flutter/widgets/custom_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -25,6 +28,10 @@ class TransactionView extends StatelessWidget {
           fontSize: responsiveValues['titleFontSize']! - 6.0,
           fontWeight: FontWeight.bold,
         );
+
+    debugPrint(
+      "A User's Transactions are: ${transactionController.transactionModel.length}",
+    );
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -67,7 +74,7 @@ class TransactionView extends StatelessWidget {
                           width: 40,
                         ),
                         title: Text(
-                          categoryName!,
+                          categoryName ?? " Name",
                         ),
                         trailing: Text(
                           'amount',
@@ -76,47 +83,106 @@ class TransactionView extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: responsiveValues['verticalSpacing']!),
-                  Expanded(
-                    child: ListView.separated(
-                      itemCount: 5,
-                      shrinkWrap: true,
-                      separatorBuilder: (context, index) => Divider(),
-                      itemBuilder: (BuildContext context, int index) =>
-                          Container(
-                        height: responsiveValues['containerHeight']!,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Center(
-                          child: ListTile(
-                            onTap: () {
-                              // debugPrint(categories[index]['name']);
-                            },
-                            // leading: CircleAvatar(
-                            //   backgroundColor: Colors.white,
-                            //   child: Icon(
-                            //     categories[index]['icon'],
-                            //     color: Colors.black,
-                            //   ),
-                            // ),
-                            title: Text(
-                              'name',
-                              style: Theme.of(context).textTheme.titleLarge,
-                            ),
+                  Obx(
+                    () => transactionController.isLoading.value
+                        ? Center(
+                            child: LoadingWidget(),
+                          )
+                        : transactionController.transactionModel.isEmpty
+                            ? Center(
+                                child: EmptyCategory(
+                                  title: "No Transaction Found",
+                                  iconData: Icons.money_off,
+                                  description:
+                                      "You have not added any transaction yet",
+                                ),
+                              )
+                            : RefreshIndicator(
+                                onRefresh: () async {
+                                  await transactionController
+                                      .fetchTransaction();
+                                },
+                                child: Expanded(
+                                  child: ListView.separated(
+                                    itemCount: transactionController
+                                        .transactionModel.length,
+                                    shrinkWrap: true,
+                                    separatorBuilder: (context, index) =>
+                                        Divider(),
+                                    itemBuilder:
+                                        (BuildContext context, int index) =>
+                                            Dismissible(
+                                      key: Key(transactionController
+                                          .transactionModel[index].id
+                                          .toString()),
+                                      onDismissed: (direction) async {
+                                        if (index >=
+                                            transactionController
+                                                .transactionModel.length) {
+                                          return;
+                                        }
 
-                            subtitle: Text(
-                              'date',
-                            ),
-                            trailing: Text(
-                              "amount",
-                              style: Theme.of(context).textTheme.titleLarge,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+                                        await transactionController
+                                            .deleteUserTransaction(
+                                          transactionController
+                                              .transactionModel[index].id!,
+                                        );
+
+                                        await transactionController
+                                            .fetchTransaction();
+
+                                        ToastWidget.showToast(
+                                          "Transaction Deleted Successfully",
+                                        );
+                                      },
+                                      background: Container(
+                                        color: Colors.red,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(right: 16.0),
+                                          child: Icon(
+                                            Icons.delete,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                      child: Container(
+                                        height: responsiveValues[
+                                            'containerHeight']!,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                        ),
+                                        child: Center(
+                                          child: ListTile(
+                                            onTap: () {
+                                              debugPrint(
+                                                "Transaction ID is: ${transactionController.transactionModel[index].id}",
+                                              );
+                                            },
+                                            title: Text(
+                                              transactionController
+                                                  .transactionModel[index].name,
+                                              style: bodyStyle,
+                                            ),
+                                            subtitle: Text(
+                                              'date',
+                                            ),
+                                            trailing: Text(
+                                              transactionController
+                                                  .transactionModel[index]
+                                                  .amount
+                                                  .toString(),
+                                              style: bodyStyle,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                  )
                 ],
               ),
             ),
