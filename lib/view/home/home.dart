@@ -130,17 +130,21 @@ class HomeView extends StatelessWidget {
                                                 .groupModel[index].name);
                                             Get.to(
                                               () => TransactionView(
-                                                // categories: categoryController
-                                                // .groupModel[index].name,
-
                                                 categoryName: categoryController
                                                     .groupModel[index].name,
                                               ),
                                             );
                                           },
-                                          leading: Image.network(
-                                            'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png',
-                                          ),
+                                          leading: Uri.parse(categoryController
+                                                      .groupModel[index].icon)
+                                                  .isAbsolute
+                                              ? Image.network(
+                                                  categoryController
+                                                      .groupModel[index].icon,
+                                                )
+                                              : Image.network(
+                                                  'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png',
+                                                ),
                                           title: Text(categoryController
                                               .groupModel[index].name),
                                           trailing: Text(
