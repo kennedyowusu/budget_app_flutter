@@ -111,4 +111,41 @@ class CategoryService {
       debugPrint('Failed to create a User\'s Category');
     }
   }
+
+  Future<void> deleteUserCategory(int categoryId) async {
+    final token = GetStorage().read('loginResponse');
+    final response = await http.delete(
+      // uri.resolve('$categoryId'),
+      Uri.parse("${APIEndpoint.CATEGORY_URL}/$categoryId"),
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token'
+      },
+    );
+
+    try {
+      if (response.statusCode == HttpStatus.ok) {
+        ToastWidget.showToast("Category deleted");
+        return;
+      } else if (response.statusCode == HttpStatus.notFound) {
+        const message = "Category not found";
+        ToastWidget.showToast(message);
+        throw Exception(message);
+      } else if (response.statusCode == HttpStatus.unauthorized) {
+        const message = "Unauthorized";
+        ToastWidget.showToast(message);
+        throw Exception(message);
+      } else {
+        const message = "Failed to delete category";
+        ToastWidget.showToast(message);
+        throw Exception(message);
+      }
+    } catch (e) {
+      debugPrint("$e");
+      throw Exception(e.toString());
+    } finally {
+      debugPrint("deleting category failed");
+    }
+  }
 }
