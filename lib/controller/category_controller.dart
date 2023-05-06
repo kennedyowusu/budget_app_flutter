@@ -29,6 +29,4 @@ class CategoryController extends GetxController {
       isLoading(false);
     }
   }
-
-  Future<void> createUserCategory() async {}
 }
