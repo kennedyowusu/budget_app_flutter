@@ -7,6 +7,7 @@ class APIEndpoint {
   static const String LOGOUT_URL = '${BASE_URL}logout';
 
   static const String CATEGORY_URL = "${BASE_URL}groups";
+  static const String TRANSACTION_URL = "${BASE_URL}expenses";
 
   static const String USER_PROFILE_URL = '${BASE_URL}profile';
 
