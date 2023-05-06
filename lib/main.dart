@@ -18,7 +18,10 @@ void main() async {
   await GetStorage.init();
   final GetStorage storage = GetStorage();
   storage.read("loginResponse");
-  // box.remove('token');
+  final userId = storage.read("userId");
+  // storage.remove('token');
+
+  debugPrint("User ID: $userId");
   runApp(BudgetApp(isUserLoggedIn: storage.hasData('loginResponse')));
 }
 

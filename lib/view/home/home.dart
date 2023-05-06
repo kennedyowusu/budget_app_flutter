@@ -103,19 +103,20 @@ class HomeView extends StatelessWidget {
                                       await categoryController
                                           .getUsersCategory();
 
-                                      ToastWidget.showToast(
-                                        "${categoryController.groupModel[index].name} deleted successfully",
-                                      );
+                                      // ToastWidget.showToast(
+                                      //   "${categoryController.groupModel[index].name} deleted successfully",
+                                      // );
                                     },
                                     background: Container(
-                                        color: Colors.red,
-                                        child: Padding(
-                                          padding: EdgeInsets.only(right: 16.0),
-                                          child: Icon(
-                                            Icons.delete,
-                                            color: Colors.white,
-                                          ),
-                                        )),
+                                      color: Colors.red,
+                                      child: Padding(
+                                        padding: EdgeInsets.only(right: 16.0),
+                                        child: Icon(
+                                          Icons.delete,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
                                     child: Container(
                                       height:
                                           responsiveValues['containerHeight']!,

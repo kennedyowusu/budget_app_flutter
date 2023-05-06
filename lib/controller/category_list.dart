@@ -132,4 +132,8 @@ class CategoryListController extends GetxController {
       isLoading(false);
     }
   }
+
+  void resetSelectedCategory() {
+    selectedCategory.value = 'Option 1';
+  }
 }
