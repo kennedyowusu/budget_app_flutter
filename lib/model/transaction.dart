@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final transactionModel = transactionModelFromJson(jsonString);
-
 import 'dart:convert';
 
 TransactionModelResponse transactionModelFromJson(String str) =>
@@ -31,7 +27,7 @@ class TransactionModelResponse {
 class TransactionModel {
   int id;
   String name;
-  String amount;
+  double amount;
   int userId;
   int groupId;
   DateTime createdAt;
