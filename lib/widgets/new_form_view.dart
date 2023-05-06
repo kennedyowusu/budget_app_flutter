@@ -118,7 +118,7 @@ class NewFormView extends StatelessWidget {
                             : 'Category Icon Link',
                         controller: transactionController.currentRoute.value ==
                                 '/new-transaction'
-                            ? transactionController.transactionPriceController
+                            ? transactionController.transactionAmountController
                             : categoryController.categoryIconController,
                         validator: (value) =>
                             transactionController.currentRoute.value ==
@@ -127,12 +127,11 @@ class NewFormView extends StatelessWidget {
                                     .validateTransactionPrice(value)
                                 : categoryController
                                     .validateCategoryIconLink(value),
-                        onChanged: (value) =>
-                            transactionController.currentRoute.value ==
-                                    '/new-transaction'
-                                ? transactionController
-                                    .setTransactionIconLink(value)
-                                : categoryController.setCategoryIconLink(value),
+                        onChanged: (value) => transactionController
+                                    .currentRoute.value ==
+                                '/new-transaction'
+                            ? transactionController.setTransactionAmount(value)
+                            : categoryController.setCategoryIconLink(value),
                       ),
                       Obx(() {
                         if (transactionController.currentRoute.value ==
@@ -183,7 +182,10 @@ class NewFormView extends StatelessWidget {
 
                                   transactionController.currentRoute.value ==
                                           '/new-transaction'
-                                      ? transactionController.saveTransaction()
+                                      ? transactionController.saveTransaction(
+                                          profileController
+                                              .userProfileModel.value.id!,
+                                        )
                                       : categoryController.saveCategory(
                                           profileController
                                               .userProfileModel.value.id!,
