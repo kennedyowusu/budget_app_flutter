@@ -17,10 +17,14 @@ class EmptyCategory extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(
-          iconData,
-          size: 64.0,
-          color: Colors.grey,
+        CircleAvatar(
+          radius: 64.0,
+          backgroundColor: Colors.white,
+          child: Icon(
+            iconData,
+            size: 64.0,
+            color: Colors.grey,
+          ),
         ),
         SizedBox(height: 16.0),
         Text(
