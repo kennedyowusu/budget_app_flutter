@@ -2,6 +2,7 @@ import 'package:budget_app_flutter/constants/colors.dart';
 import 'package:budget_app_flutter/controller/category_controller.dart';
 import 'package:budget_app_flutter/helper/calculate_responsiveness.dart';
 import 'package:budget_app_flutter/view/home/new_category.dart';
+import 'package:budget_app_flutter/view/notFound/empty_category.dart';
 import 'package:budget_app_flutter/view/transaction/transaction.dart';
 import 'package:budget_app_flutter/widgets/custom_appbar.dart';
 import 'package:budget_app_flutter/widgets/custom_button_sheet.dart';
@@ -58,48 +59,55 @@ class HomeView extends StatelessWidget {
                       ? Center(
                           child: LoadingWidget(),
                         )
-                      : Expanded(
-                          child: ListView.separated(
-                            itemCount: categoryController.groupModel.length,
-                            shrinkWrap: true,
-                            separatorBuilder: (context, index) => Divider(),
-                            itemBuilder: (BuildContext context, int index) =>
-                                Container(
-                              height: responsiveValues['containerHeight']!,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Center(
-                                child: ListTile(
-                                  onTap: () {
-                                    debugPrint(categoryController
-                                        .groupModel[index].name);
-                                    Get.to(
-                                      () => TransactionView(
-                                        categories: categoryController
-                                            .groupModel[index].name,
-                                      ),
-                                    );
-                                  },
-                                  leading: Image.network(
-                                    'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png',
+                      : categoryController.groupModel.isEmpty
+                          ? EmptyCategory(
+                              iconData: Icons.category,
+                              title: "No Category",
+                              description: "Please add a new category",
+                            )
+                          : Expanded(
+                              child: ListView.separated(
+                                itemCount: categoryController.groupModel.length,
+                                shrinkWrap: true,
+                                separatorBuilder: (context, index) => Divider(),
+                                itemBuilder:
+                                    (BuildContext context, int index) =>
+                                        Container(
+                                  height: responsiveValues['containerHeight']!,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(5),
                                   ),
-                                  title: Text(categoryController
-                                      .groupModel[index].name),
-                                  trailing: Text(
-                                    categoryController.groupModel[index].id
-                                        .toString(),
-                                    style: TextStyle(
-                                      color: mainColor,
-                                      fontWeight: FontWeight.bold,
+                                  child: Center(
+                                    child: ListTile(
+                                      onTap: () {
+                                        debugPrint(categoryController
+                                            .groupModel[index].name);
+                                        Get.to(
+                                          () => TransactionView(
+                                            categories: categoryController
+                                                .groupModel[index].name,
+                                          ),
+                                        );
+                                      },
+                                      leading: Image.network(
+                                        'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png',
+                                      ),
+                                      title: Text(categoryController
+                                          .groupModel[index].name),
+                                      trailing: Text(
+                                        categoryController.groupModel[index].id
+                                            .toString(),
+                                        style: TextStyle(
+                                          color: mainColor,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ),
-                        )),
+                            )),
                   SizedBox(
                     height: responsiveValues['verticalSpacing']!,
                   ),
