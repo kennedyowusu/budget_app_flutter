@@ -1,3 +1,7 @@
+// To parse this JSON data, do
+//
+//     final transactionModel = transactionModelFromJson(jsonString);
+
 import 'dart:convert';
 
 TransactionModelResponse transactionModelFromJson(String str) =>
@@ -25,16 +29,20 @@ class TransactionModelResponse {
 }
 
 class TransactionModel {
-  int? id;
+  int id;
   String name;
   String amount;
   int userId;
+  int groupId;
+  DateTime createdAt;
 
   TransactionModel({
-    this.id,
+    required this.id,
     required this.name,
     required this.amount,
     required this.userId,
+    required this.groupId,
+    required this.createdAt,
   });
 
   factory TransactionModel.fromJson(Map<String, dynamic> json) =>
@@ -43,6 +51,8 @@ class TransactionModel {
         name: json["name"],
         amount: json["amount"],
         userId: json["user_id"],
+        groupId: json["group_id"],
+        createdAt: DateTime.parse(json["created_at"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -50,5 +60,7 @@ class TransactionModel {
         "name": name,
         "amount": amount,
         "user_id": userId,
+        "group_id": groupId,
+        "created_at": createdAt.toIso8601String(),
       };
 }

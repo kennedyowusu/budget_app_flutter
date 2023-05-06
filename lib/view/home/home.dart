@@ -64,10 +64,12 @@ class HomeView extends StatelessWidget {
                           child: LoadingWidget(),
                         )
                       : categoryController.groupModel.isEmpty
-                          ? EmptyCategory(
-                              iconData: Icons.category,
-                              title: "No Category",
-                              description: "Please add a new category",
+                          ? Center(
+                              child: EmptyCategory(
+                                iconData: Icons.category,
+                                title: "No Category",
+                                description: "Please add a new category",
+                              ),
                             )
                           : RefreshIndicator(
                               onRefresh: () async {
