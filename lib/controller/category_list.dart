@@ -95,7 +95,7 @@ class CategoryListController extends GetxController {
         );
 
         debugPrint(
-          'Category Response: $response',
+          'Category Response: ${response.data.toString()}',
         );
 
         debugPrint(
@@ -110,7 +110,6 @@ class CategoryListController extends GetxController {
         categoryIconController.clear();
       } catch (e) {
         isLoading.value = false;
-        ToastWidget.showToast('Error creating category');
         debugPrint('Transaction not sent: $e');
         debugPrint('Response Code: $e');
       } finally {
