@@ -1,11 +1,11 @@
 import 'package:budget_app_flutter/constants/colors.dart';
 import 'package:budget_app_flutter/controller/category_controller.dart';
-import 'package:budget_app_flutter/data/categories.dart';
 import 'package:budget_app_flutter/helper/calculate_responsiveness.dart';
 import 'package:budget_app_flutter/view/home/new_category.dart';
 import 'package:budget_app_flutter/view/transaction/transaction.dart';
 import 'package:budget_app_flutter/widgets/custom_appbar.dart';
 import 'package:budget_app_flutter/widgets/custom_button_sheet.dart';
+import 'package:budget_app_flutter/widgets/custom_loader.dart';
 import 'package:budget_app_flutter/widgets/custom_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -54,51 +54,52 @@ class HomeView extends StatelessWidget {
               child: Column(
                 children: [
                   SizedBox(height: responsiveValues['verticalSpacing']!),
-                  Expanded(
-                    child: ListView.separated(
-                      itemCount: categoryController.groupModel.length,
-                      shrinkWrap: true,
-                      separatorBuilder: (context, index) => Divider(),
-                      itemBuilder: (BuildContext context, int index) =>
-                          Container(
-                        height: responsiveValues['containerHeight']!,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Center(
-                          child: ListTile(
-                            onTap: () {
-                              debugPrint(
-                                  categoryController.groupModel[index].name);
-                              Get.to(
-                                () => TransactionView(
-                                  categories:
-                                      categoryController.groupModel[index].name,
+                  Obx(() => categoryController.isLoading.value
+                      ? Center(
+                          child: LoadingWidget(),
+                        )
+                      : Expanded(
+                          child: ListView.separated(
+                            itemCount: categoryController.groupModel.length,
+                            shrinkWrap: true,
+                            separatorBuilder: (context, index) => Divider(),
+                            itemBuilder: (BuildContext context, int index) =>
+                                Container(
+                              height: responsiveValues['containerHeight']!,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Center(
+                                child: ListTile(
+                                  onTap: () {
+                                    debugPrint(categoryController
+                                        .groupModel[index].name);
+                                    Get.to(
+                                      () => TransactionView(
+                                        categories: categoryController
+                                            .groupModel[index].name,
+                                      ),
+                                    );
+                                  },
+                                  leading: Image.network(
+                                    'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png',
+                                  ),
+                                  title: Text(categoryController
+                                      .groupModel[index].name),
+                                  trailing: Text(
+                                    categoryController.groupModel[index].id
+                                        .toString(),
+                                    style: TextStyle(
+                                      color: mainColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                 ),
-                              );
-                            },
-                            leading: Image.network(
-                              'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png',
-                            ),
-
-                            // leading: Icon(categories[index]['icon']),
-                            title:
-                                Text(categoryController.groupModel[index].name),
-                            // subtitle: Text(categoryController.groupModel[index].name),
-                            trailing: Text(
-                              categoryController.groupModel[index].id
-                                  .toString(),
-                              style: TextStyle(
-                                color: mainColor,
-                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                    ),
-                  ),
+                        )),
                   SizedBox(
                     height: responsiveValues['verticalSpacing']!,
                   ),
@@ -107,9 +108,7 @@ class HomeView extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                Get.to(
-                  () => NewCategoryView(),
-                );
+                Get.to(() => NewCategoryView());
               },
               child: CustomBottomSheet(
                 titleStyle: titleStyle,
