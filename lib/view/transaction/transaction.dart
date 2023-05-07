@@ -1,4 +1,5 @@
 import 'package:budget_app_flutter/constants/colors.dart';
+import 'package:budget_app_flutter/controller/category_controller.dart';
 import 'package:budget_app_flutter/controller/transaction_controller.dart';
 import 'package:budget_app_flutter/helper/calculate_responsiveness.dart';
 import 'package:budget_app_flutter/view/notFound/empty_category.dart';
@@ -16,12 +17,15 @@ class TransactionView extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final String? categoryName;
+  int? groupId;
 
-  final TransactionController transactionController =
-      Get.put(TransactionController());
+  final CategoryController categoryController = Get.put(CategoryController());
 
   @override
   Widget build(BuildContext context) {
+    final TransactionController transactionController =
+        Get.put(TransactionController(groupId: groupId ?? 0));
+
     final responsiveValues = calculateResponsiveValues(context);
     final titleStyle = Theme.of(context).textTheme.titleLarge!.copyWith(
           color: Colors.white,
@@ -31,6 +35,26 @@ class TransactionView extends StatelessWidget {
 
     debugPrint(
       "A User's Transactions are: ${transactionController.transactionModel.length}",
+    );
+
+    debugPrint(
+      "This is the length of items in this group: ${categoryController.groupModel.length}",
+    );
+
+    // print all the transactions in this group
+    categoryController.groupModel.forEach((element) {
+      print(element.userId);
+    });
+
+    final transactionList = transactionController.transactionModel
+        .where((element) => element.name == categoryName)
+        .toList();
+
+    debugPrint(
+        "This is the length of the transaction list: ${transactionList.length}");
+
+    debugPrint(
+      "Number of transactions: ${transactionController.transactionModel.length}",
     );
 
     return Scaffold(
@@ -89,6 +113,7 @@ class TransactionView extends StatelessWidget {
                             child: LoadingWidget(),
                           )
                         : transactionController.transactionModel.isEmpty
+                            // : categoryController.groupModel.isEmpty
                             ? Center(
                                 child: EmptyCategory(
                                   title: "No Transaction Found",
@@ -99,8 +124,10 @@ class TransactionView extends StatelessWidget {
                               )
                             : RefreshIndicator(
                                 onRefresh: () async {
-                                  // await transactionController
-                                  //     .fetchTransaction();
+                                  // await transactionController.fetchTransaction(
+                                  //   transactionController
+                                  //       .transactionModel[0].id,
+                                  // );
                                 },
                                 child: Expanded(
                                   child: ListView.separated(
@@ -130,8 +157,18 @@ class TransactionView extends StatelessWidget {
 
                                         await transactionController
                                             .fetchTransaction(
-                                          transactionController
-                                              .transactionModel[index].id,
+                                          // transactionController
+                                          //     .transactionModel[index].id,
+
+                                          // categoryController
+                                          //     .groupModel[categoryController
+                                          //         .groupModel
+                                          //         .indexOf(categoryController
+                                          //             .groupModel[0])]
+                                          //     .id!,
+
+                                          categoryController
+                                              .groupModel.first.id!,
                                         );
 
                                         ToastWidget.showToast(

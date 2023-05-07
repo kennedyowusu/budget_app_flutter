@@ -129,8 +129,14 @@ class HomeView extends StatelessWidget {
                                       child: Center(
                                         child: ListTile(
                                           onTap: () {
-                                            debugPrint(categoryController
-                                                .groupModel[index].name);
+                                            debugPrint(
+                                              categoryController
+                                                  .groupModel[index].name,
+                                            );
+
+                                            debugPrint(
+                                              "${categoryController.groupModel[index].id}",
+                                            );
                                             Get.to(
                                               () => TransactionView(
                                                 categoryName: categoryController

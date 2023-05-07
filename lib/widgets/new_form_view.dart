@@ -22,6 +22,7 @@ class NewFormView extends StatelessWidget {
   final VoidCallback onPressed;
   final String backText;
   final VoidCallback onBack;
+  int? groupId;
 
   NewFormView({
     super.key,
@@ -32,8 +33,6 @@ class NewFormView extends StatelessWidget {
     required this.onBack,
   });
 
-  final TransactionController transactionController =
-      Get.put(TransactionController());
   final CategoryListController categoryController =
       Get.put(CategoryListController());
 
@@ -41,6 +40,9 @@ class NewFormView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final TransactionController transactionController =
+        Get.put(TransactionController(groupId: groupId!));
+
     final responsiveValues = calculateResponsiveValues(context);
     final titleStyle = Theme.of(context).textTheme.titleLarge!.copyWith(
           color: Colors.white,

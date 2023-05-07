@@ -1,10 +1,12 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
 import 'package:budget_app_flutter/controller/category_list.dart';
 import 'package:budget_app_flutter/model/group.dart';
 import 'package:budget_app_flutter/model/transaction.dart';
 import 'package:budget_app_flutter/services/transactions/transacton.dart';
 import 'package:budget_app_flutter/widgets/custom_toast.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class TransactionController extends GetxController {
   final TransactionService transactionService = TransactionService();
@@ -20,6 +22,11 @@ class TransactionController extends GetxController {
   final RxString transactionName = "".obs;
   final RxString transactionAmount = "".obs;
 
+  int groupId;
+  TransactionController({
+    required this.groupId,
+  });
+
   TextEditingController transactionNameController = TextEditingController();
   TextEditingController transactionAmountController = TextEditingController();
 
@@ -29,14 +36,9 @@ class TransactionController extends GetxController {
 
   @override
   void onInit() {
-    @override
-    void onInit() {
-      // if (groupModel.isNotEmpty) {
-      //   fetchTransaction(groupModel[0].id!);
-      // }
-      super.onInit();
+    if (groupModel.isNotEmpty) {
+      fetchTransaction(groupId);
     }
-
     super.onInit();
   }
 
@@ -149,18 +151,18 @@ class TransactionController extends GetxController {
   Future<void> fetchTransaction(int groupId) async {
     try {
       isLoading.value = true;
-      // TransactionModelResponse transactionResponse =
-      //     await transactionService.getTransactions(groupId);
 
       final TransactionModelResponse transactionResponse =
           await transactionService.getTransactions(groupId);
 
-      if (transactionResponse != null && transactionResponse.data != null) {
-        transactionModel.assignAll(transactionResponse.data);
-      } else {
-        debugPrint("No transaction found");
-        transactionModel.assignAll([]);
-      }
+      // if (transactionResponse && transactionResponse.data != null) {
+      //   transactionModel.assignAll(transactionResponse.data);
+      // } else {
+      //   debugPrint("No transaction found");
+      //   transactionModel.assignAll([]);
+      // }
+
+      transactionModel.assignAll(transactionResponse.data);
 
       transactionModel.assignAll(transactionResponse.data);
       debugPrint("Fetch transaction ${transactionResponse.data}");
@@ -173,6 +175,7 @@ class TransactionController extends GetxController {
       debugPrint('Transaction not fetched: $e');
     } finally {
       isLoading.value = false;
+      debugPrint("Transactions in the list: ${transactionModel.length}");
     }
   }
 

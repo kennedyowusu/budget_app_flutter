@@ -23,7 +23,7 @@ class TransactionService {
         'Authorization': 'Bearer $token'
       },
     );
-    debugPrint("transactions: $response");
+    debugPrint("transactions: ${response.body}");
     debugPrint("Token: $token");
 
     try {
