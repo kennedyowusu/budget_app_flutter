@@ -9,16 +9,11 @@ import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
 class TransactionService {
-  // final Uri uri = Uri.parse(APIEndpoint.GROUP_EXPENSES_URL);
-
   Future<TransactionModelResponse> getTransactions(int groupId) async {
     final token = GetStorage().read('loginResponse');
     final Uri url = Uri.parse(APIEndpoint.getGroupExpensesUrl(groupId));
 
     final response = await http.get(
-      // uri.replace(queryParameters: {
-      //   'group_id': groupId.toString(),
-      // }),
       url,
       headers: {
         'Content-Type': 'application/json',
@@ -33,11 +28,8 @@ class TransactionService {
 
     try {
       if (response.statusCode == 200) {
-        final jsonRes = jsonDecode(response.body);
-        debugPrint("jsonRes: $jsonRes");
-
         final TransactionModelResponse transactionModelResponse =
-            transactionModelFromJson(jsonRes);
+            transactionModelFromJson(response.body);
 
         debugPrint("transactions: ${transactionModelResponse.data}");
 
