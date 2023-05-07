@@ -2,7 +2,6 @@ import 'package:budget_app_flutter/constants/colors.dart';
 import 'package:budget_app_flutter/controller/category_controller.dart';
 import 'package:budget_app_flutter/controller/transaction_controller.dart';
 import 'package:budget_app_flutter/helper/calculate_responsiveness.dart';
-import 'package:budget_app_flutter/model/group.dart';
 import 'package:budget_app_flutter/view/notFound/empty_category.dart';
 import 'package:budget_app_flutter/view/transaction/new_transaction.dart';
 import 'package:budget_app_flutter/widgets/custom_appbar.dart';
@@ -33,38 +32,6 @@ class TransactionView extends StatelessWidget {
 
     final TransactionController transactionController =
         Get.put(TransactionController(groupId: groupId));
-
-    // debugPrint(
-    //   "A User's Transactions are: ${transactionController.transactionModel.length}",
-    // );
-
-    // debugPrint(
-    //   "This is the length of items in this group: ${categoryController.groupModel.length}",
-    // );
-
-    // print all the transactions in this group
-    categoryController.groupModel.forEach((element) {
-      print(element.userId);
-    });
-
-    final transactionList = transactionController.transactionModel
-        .where((element) => element.name == categoryName)
-        .toList();
-
-    // debugPrint(
-    //     "This is the length of the transaction list: ${transactionList.length}");
-
-    // debugPrint(
-    //   "Number of transactions: ${transactionController.transactionModel.length}",
-    // );
-
-    // final newGroup = transactionController.fetchTransactions(
-    //   GroupModel(
-    //     name: categoryName! ?? "",
-    //     icon: "https://cdn-icons-png.flaticon.com/512/1828/1828884.png",
-    //     userId: 1,
-    //   ),
-    // );
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -122,7 +89,6 @@ class TransactionView extends StatelessWidget {
                             child: LoadingWidget(),
                           )
                         : transactionController.transactionModel.isEmpty
-                            // : categoryController.groupModel.isEmpty
                             ? Center(
                                 child: EmptyCategory(
                                   title: "No Transaction Found",
@@ -133,10 +99,10 @@ class TransactionView extends StatelessWidget {
                               )
                             : RefreshIndicator(
                                 onRefresh: () async {
-                                  // await transactionController.fetchTransaction(
-                                  //   transactionController
-                                  //       .transactionModel[0].id,
-                                  // );
+                                  await transactionController.fetchTransactions(
+                                    transactionController
+                                        .transactionModel.first.id,
+                                  );
                                 },
                                 child: Expanded(
                                   child: ListView.separated(
@@ -166,9 +132,9 @@ class TransactionView extends StatelessWidget {
 
                                         await transactionController
                                             .fetchTransactions(
-                                                transactionController
-                                                    .transactionModel[index]
-                                                    .id);
+                                          transactionController
+                                              .transactionModel[index].id,
+                                        );
 
                                         ToastWidget.showToast(
                                           "Transaction Deleted Successfully",
@@ -227,7 +193,6 @@ class TransactionView extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                // Get.toNamed('/new-transaction');
                 Get.to(() => NewTransactionView());
                 transactionController.setCurrentRoute('/new-transaction');
               },
