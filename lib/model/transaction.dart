@@ -27,7 +27,7 @@ class TransactionModelResponse {
 class TransactionModel {
   int id;
   String name;
-  double amount;
+  String amount;
   int userId;
   int groupId;
   DateTime createdAt;
