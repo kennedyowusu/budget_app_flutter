@@ -181,7 +181,6 @@ class TransactionController extends GetxController {
       debugPrint("Delete transaction");
     } catch (e) {
       isLoading.value = false;
-      // ToastWidget.showToast(e.toString());
       debugPrint('Transaction not deleted: $e');
     } finally {
       isLoading.value = false;

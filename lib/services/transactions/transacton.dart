@@ -146,15 +146,14 @@ class TransactionService {
           },
         );
         if (deleteResponse.statusCode == HttpStatus.ok) {
-          // ToastWidget.showToast("Transaction deleted");
           return;
         } else if (deleteResponse.statusCode == HttpStatus.notFound) {
           const message = "Transaction not found";
-          // ToastWidget.showToast(message);
+          ToastWidget.showToast(message);
           throw Exception(message);
         } else {
           const message = "Failed to delete Transaction";
-          // ToastWidget.showToast(message);
+          ToastWidget.showToast(message);
           throw Exception(message);
         }
       } else if (response.statusCode == HttpStatus.notFound) {
