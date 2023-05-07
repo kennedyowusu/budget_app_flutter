@@ -113,73 +113,33 @@ class TransactionView extends StatelessWidget {
                                         Divider(),
                                     itemBuilder:
                                         (BuildContext context, int index) =>
-                                            Dismissible(
-                                      key: Key(transactionController
-                                          .transactionModel[index].id
-                                          .toString()),
-                                      onDismissed: (direction) async {
-                                        if (index >=
-                                            transactionController
-                                                .transactionModel.length) {
-                                          return;
-                                        }
-
-                                        await transactionController
-                                            .deleteUserTransaction(
-                                          transactionController
-                                              .transactionModel[index].id,
-                                        );
-
-                                        await transactionController
-                                            .fetchTransactions(
-                                          transactionController
-                                              .transactionModel[index].id,
-                                        );
-
-                                        ToastWidget.showToast(
-                                          "Transaction Deleted Successfully",
-                                        );
-                                      },
-                                      background: Container(
-                                        color: Colors.red,
-                                        child: Padding(
-                                          padding: EdgeInsets.only(right: 16.0),
-                                          child: Icon(
-                                            Icons.delete,
-                                            color: Colors.white,
-                                          ),
-                                        ),
+                                            Container(
+                                      height:
+                                          responsiveValues['containerHeight']!,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(5),
                                       ),
-                                      child: Container(
-                                        height: responsiveValues[
-                                            'containerHeight']!,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                        ),
-                                        child: Center(
-                                          child: ListTile(
-                                            onTap: () {
-                                              debugPrint(
-                                                "Transaction ID is: ${transactionController.transactionModel[index].id}",
-                                              );
-                                            },
-                                            title: Text(
-                                              transactionController
-                                                  .transactionModel[index].name,
-                                              style: bodyStyle,
-                                            ),
-                                            subtitle: Text(
-                                              'date',
-                                            ),
-                                            trailing: Text(
-                                              transactionController
-                                                  .transactionModel[index]
-                                                  .amount
-                                                  .toString(),
-                                              style: bodyStyle,
-                                            ),
+                                      child: Center(
+                                        child: ListTile(
+                                          onTap: () {
+                                            debugPrint(
+                                              "Transaction ID is: ${transactionController.transactionModel[index].id}",
+                                            );
+                                          },
+                                          title: Text(
+                                            transactionController
+                                                .transactionModel[index].name,
+                                            style: bodyStyle,
+                                          ),
+                                          subtitle: Text(
+                                            'date',
+                                          ),
+                                          trailing: Text(
+                                            transactionController
+                                                .transactionModel[index].amount
+                                                .toString(),
+                                            style: bodyStyle,
                                           ),
                                         ),
                                       ),
