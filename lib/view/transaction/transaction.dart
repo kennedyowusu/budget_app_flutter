@@ -7,7 +7,6 @@ import 'package:budget_app_flutter/view/transaction/new_transaction.dart';
 import 'package:budget_app_flutter/widgets/custom_appbar.dart';
 import 'package:budget_app_flutter/widgets/custom_button_sheet.dart';
 import 'package:budget_app_flutter/widgets/custom_loader.dart';
-import 'package:budget_app_flutter/widgets/custom_toast.dart';
 import 'package:budget_app_flutter/widgets/custom_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -76,9 +75,23 @@ class TransactionView extends StatelessWidget {
                         title: Text(
                           categoryName ?? " Name",
                         ),
-                        trailing: Text(
-                          'amount',
-                        ),
+                        trailing: Obx(() {
+                          double totalAmount = 0.0;
+                          for (var transaction
+                              in transactionController.transactionModel) {
+                            totalAmount += transaction.amount.toString() == ""
+                                ? 0.0
+                                : double.parse(
+                                    transaction.amount,
+                                  );
+                          }
+                          return Text(
+                            totalAmount.toStringAsFixed(2),
+                            style: titleStyle.copyWith(
+                              color: textColor,
+                            ),
+                          );
+                        }),
                       ),
                     ),
                   ),
