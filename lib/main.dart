@@ -53,6 +53,8 @@ class _BudgetAppState extends State<BudgetApp> {
     }
   }
 
+  int groupId = 0;
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ThemeController>(
@@ -67,7 +69,11 @@ class _BudgetAppState extends State<BudgetApp> {
             GetPage(name: '/new-category', page: () => NewCategoryView()),
             GetPage(name: '/category', page: () => NewCategoryView()),
             GetPage(name: '/new-transaction', page: () => NewTransactionView()),
-            GetPage(name: '/transaction', page: () => TransactionView()),
+            GetPage(
+                name: '/transaction',
+                page: () => TransactionView(
+                      groupId: groupId,
+                    )),
           ],
           onUnknownRoute: (settings) => MaterialPageRoute(
             builder: (context) => UnknownScreen(

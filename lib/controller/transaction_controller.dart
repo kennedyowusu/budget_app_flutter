@@ -1,9 +1,9 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:budget_app_flutter/model/group.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:budget_app_flutter/controller/category_list.dart';
-import 'package:budget_app_flutter/model/group.dart';
+
 import 'package:budget_app_flutter/model/transaction.dart';
 import 'package:budget_app_flutter/services/transactions/transacton.dart';
 import 'package:budget_app_flutter/widgets/custom_toast.dart';
@@ -11,8 +11,9 @@ import 'package:budget_app_flutter/widgets/custom_toast.dart';
 class TransactionController extends GetxController {
   final TransactionService transactionService = TransactionService();
   final RxList<TransactionModel> transactionModel = <TransactionModel>[].obs;
-  final RxList<GroupModel> groupModel = <GroupModel>[].obs;
   final RxString currentRoute = ''.obs;
+
+  // final GroupModel? group;
 
   final GlobalKey<FormState> transactionFormKey = GlobalKey<FormState>();
 
@@ -23,9 +24,8 @@ class TransactionController extends GetxController {
   final RxString transactionAmount = "".obs;
 
   int groupId;
-  TransactionController({
-    required this.groupId,
-  });
+
+  TransactionController({required this.groupId});
 
   TextEditingController transactionNameController = TextEditingController();
   TextEditingController transactionAmountController = TextEditingController();
@@ -36,9 +36,11 @@ class TransactionController extends GetxController {
 
   @override
   void onInit() {
-    if (groupModel.isNotEmpty) {
-      fetchTransaction(groupId);
-    }
+    // if (groupModel.isNotEmpty) {
+    //   fetchTransaction(groupId);
+    // }
+
+    fetchTransactions(groupId);
     super.onInit();
   }
 
@@ -148,31 +150,58 @@ class TransactionController extends GetxController {
     categoryList.resetSelectedCategory();
   }
 
-  Future<void> fetchTransaction(int groupId) async {
+  // Future<void> fetchTransaction(GroupModel group) async {
+  //   try {
+  //     isLoading.value = true;
+
+  //     final TransactionModelResponse transactionResponse =
+  //         await transactionService.getTransactions(group.id!);
+
+  //     transactionModel.assignAll(transactionResponse.data);
+
+  //     debugPrint("Group ID passed to fetchTransaction is: $groupId");
+
+  //     debugPrint(
+  //         "Fetched transactions are: ${transactionResponse.data.length}");
+  //     debugPrint(
+  //       "Total Transactions for this User: ${transactionModel.length}",
+  //     );
+  //   } catch (e) {
+  //     isLoading.value = false;
+  //     ToastWidget.showToast(e.toString());
+  //     debugPrint('Transaction not fetched: $e');
+  //   } finally {
+  //     isLoading.value = false;
+  //     debugPrint("Transactions in the list: ${transactionModel.length}");
+  //   }
+  // }
+
+  Future<void> fetchTransactions(int groupId) async {
     try {
       isLoading.value = true;
 
       final TransactionModelResponse transactionResponse =
           await transactionService.getTransactions(groupId);
 
-      // if (transactionResponse && transactionResponse.data != null) {
-      //   transactionModel.assignAll(transactionResponse.data);
-      // } else {
-      //   debugPrint("No transaction found");
-      //   transactionModel.assignAll([]);
-      // }
-
       transactionModel.assignAll(transactionResponse.data);
 
-      transactionModel.assignAll(transactionResponse.data);
-      debugPrint("Fetch transaction ${transactionResponse.data}");
+      debugPrint("Group ID passed to fetchTransaction is: $groupId");
+
+      debugPrint(
+        "Total Transactions for Group': ${transactionModel.length}",
+      );
+
+      debugPrint(
+        "Fetched transactions are: ${transactionResponse.data.length}",
+      );
+
       debugPrint(
         "Total Transactions for this User: ${transactionModel.length}",
       );
     } catch (e) {
       isLoading.value = false;
       ToastWidget.showToast(e.toString());
-      debugPrint('Transaction not fetched: $e');
+      debugPrint('Transactions not fetched: $e');
     } finally {
       isLoading.value = false;
       debugPrint("Transactions in the list: ${transactionModel.length}");

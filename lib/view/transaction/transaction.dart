@@ -2,6 +2,7 @@ import 'package:budget_app_flutter/constants/colors.dart';
 import 'package:budget_app_flutter/controller/category_controller.dart';
 import 'package:budget_app_flutter/controller/transaction_controller.dart';
 import 'package:budget_app_flutter/helper/calculate_responsiveness.dart';
+import 'package:budget_app_flutter/model/group.dart';
 import 'package:budget_app_flutter/view/notFound/empty_category.dart';
 import 'package:budget_app_flutter/view/transaction/new_transaction.dart';
 import 'package:budget_app_flutter/widgets/custom_appbar.dart';
@@ -13,19 +14,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class TransactionView extends StatelessWidget {
-  TransactionView({super.key, this.categoryName});
+  TransactionView({super.key, this.categoryName, required this.groupId});
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final String? categoryName;
-  int? groupId;
+  final int groupId;
 
   final CategoryController categoryController = Get.put(CategoryController());
 
   @override
   Widget build(BuildContext context) {
-    final TransactionController transactionController =
-        Get.put(TransactionController(groupId: groupId ?? 0));
-
     final responsiveValues = calculateResponsiveValues(context);
     final titleStyle = Theme.of(context).textTheme.titleLarge!.copyWith(
           color: Colors.white,
@@ -33,13 +31,16 @@ class TransactionView extends StatelessWidget {
           fontWeight: FontWeight.bold,
         );
 
-    debugPrint(
-      "A User's Transactions are: ${transactionController.transactionModel.length}",
-    );
+    final TransactionController transactionController =
+        Get.put(TransactionController(groupId: groupId));
 
-    debugPrint(
-      "This is the length of items in this group: ${categoryController.groupModel.length}",
-    );
+    // debugPrint(
+    //   "A User's Transactions are: ${transactionController.transactionModel.length}",
+    // );
+
+    // debugPrint(
+    //   "This is the length of items in this group: ${categoryController.groupModel.length}",
+    // );
 
     // print all the transactions in this group
     categoryController.groupModel.forEach((element) {
@@ -50,12 +51,20 @@ class TransactionView extends StatelessWidget {
         .where((element) => element.name == categoryName)
         .toList();
 
-    debugPrint(
-        "This is the length of the transaction list: ${transactionList.length}");
+    // debugPrint(
+    //     "This is the length of the transaction list: ${transactionList.length}");
 
-    debugPrint(
-      "Number of transactions: ${transactionController.transactionModel.length}",
-    );
+    // debugPrint(
+    //   "Number of transactions: ${transactionController.transactionModel.length}",
+    // );
+
+    // final newGroup = transactionController.fetchTransactions(
+    //   GroupModel(
+    //     name: categoryName! ?? "",
+    //     icon: "https://cdn-icons-png.flaticon.com/512/1828/1828884.png",
+    //     userId: 1,
+    //   ),
+    // );
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -156,20 +165,10 @@ class TransactionView extends StatelessWidget {
                                         );
 
                                         await transactionController
-                                            .fetchTransaction(
-                                          // transactionController
-                                          //     .transactionModel[index].id,
-
-                                          // categoryController
-                                          //     .groupModel[categoryController
-                                          //         .groupModel
-                                          //         .indexOf(categoryController
-                                          //             .groupModel[0])]
-                                          //     .id!,
-
-                                          categoryController
-                                              .groupModel.first.id!,
-                                        );
+                                            .fetchTransactions(
+                                                transactionController
+                                                    .transactionModel[index]
+                                                    .id);
 
                                         ToastWidget.showToast(
                                           "Transaction Deleted Successfully",

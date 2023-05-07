@@ -8,8 +8,16 @@ class APIEndpoint {
 
   static const String CATEGORY_URL = "${BASE_URL}groups";
   static const String TRANSACTION_URL = "${BASE_URL}expenses";
-  static const String GROUP_EXPENSES_URL =
-      "${BASE_URL}groups/{group_id}/expenses";
+  // static const String GROUP_EXPENSES_URL =
+  //     "${BASE_URL}groups/{group_id}/expenses";
+
+  static String getGroupExpensesUrl(int groupId) {
+    return "${BASE_URL}groups/$groupId/expenses";
+  }
+
+  debugPrint(groupId) {
+    debugPrint("Group ID received in getTransactions Endpoint: $groupId");
+  }
 
   static const String USER_PROFILE_URL = '${BASE_URL}profile';
 

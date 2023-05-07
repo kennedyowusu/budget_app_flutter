@@ -9,29 +9,37 @@ import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
 class TransactionService {
-  final Uri uri = Uri.parse(APIEndpoint.GROUP_EXPENSES_URL);
+  // final Uri uri = Uri.parse(APIEndpoint.GROUP_EXPENSES_URL);
 
   Future<TransactionModelResponse> getTransactions(int groupId) async {
     final token = GetStorage().read('loginResponse');
+    final Uri url = Uri.parse(APIEndpoint.getGroupExpensesUrl(groupId));
+
     final response = await http.get(
-      uri.replace(queryParameters: {
-        'group_id': groupId.toString(),
-      }),
+      // uri.replace(queryParameters: {
+      //   'group_id': groupId.toString(),
+      // }),
+      url,
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
         'Authorization': 'Bearer $token'
       },
     );
-    debugPrint("transactions: ${response.body}");
+    debugPrint("total transactions: ${response.body}");
     debugPrint("Token: $token");
+    debugPrint("URI: $url");
+    debugPrint("Group ID received in getTransactions: $groupId");
 
     try {
       if (response.statusCode == 200) {
-        final TransactionModelResponse transactionModelResponse =
-            transactionModelFromJson(response.body);
+        final jsonRes = jsonDecode(response.body);
+        debugPrint("jsonRes: $jsonRes");
 
-        debugPrint("transactions: $transactionModelResponse");
+        final TransactionModelResponse transactionModelResponse =
+            transactionModelFromJson(jsonRes);
+
+        debugPrint("transactions: ${transactionModelResponse.data}");
 
         GetStorage().write("transactions", transactionModelResponse.data);
         return transactionModelResponse;
@@ -58,6 +66,7 @@ class TransactionService {
       };
 
       final token = GetStorage().read('loginResponse');
+      final Uri uri = Uri.parse(APIEndpoint.getGroupExpensesUrl(userId));
 
       final response = await http.get(
         uri,

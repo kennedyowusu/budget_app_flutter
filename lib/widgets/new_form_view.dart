@@ -41,7 +41,7 @@ class NewFormView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TransactionController transactionController =
-        Get.put(TransactionController(groupId: groupId!));
+        Get.put(TransactionController(groupId: groupId ?? 0));
 
     final responsiveValues = calculateResponsiveValues(context);
     final titleStyle = Theme.of(context).textTheme.titleLarge!.copyWith(
@@ -204,7 +204,9 @@ class NewFormView extends StatelessWidget {
 
                                   transactionController.currentRoute.value ==
                                           '/new-transaction'
-                                      ? Get.to(() => TransactionView())
+                                      ? Get.to(() => TransactionView(
+                                            groupId: groupId!,
+                                          ))
                                       : Get.to(() => HomeView());
                                 },
                                 height: responsiveValues['buttonHeight']!,

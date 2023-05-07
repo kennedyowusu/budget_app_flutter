@@ -7,6 +7,8 @@ import 'transaction.dart';
 class NewTransactionView extends StatelessWidget {
   NewTransactionView({super.key});
 
+  int groupId = 0;
+
   final GlobalKey<FormState> transactionFormKey = GlobalKey<FormState>();
 
   @override
@@ -21,7 +23,7 @@ class NewTransactionView extends StatelessWidget {
       },
       backText: "Back Transaction",
       onBack: () {
-        Get.to(() => TransactionView());
+        Get.to(() => TransactionView(groupId: groupId));
       },
     );
   }

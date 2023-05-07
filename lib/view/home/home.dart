@@ -1,7 +1,9 @@
 import 'package:budget_app_flutter/constants/colors.dart';
 import 'package:budget_app_flutter/controller/category_controller.dart';
 import 'package:budget_app_flutter/controller/category_list.dart';
+import 'package:budget_app_flutter/controller/transaction_controller.dart';
 import 'package:budget_app_flutter/helper/calculate_responsiveness.dart';
+import 'package:budget_app_flutter/model/group.dart';
 import 'package:budget_app_flutter/view/home/new_category.dart';
 import 'package:budget_app_flutter/view/notFound/empty_category.dart';
 import 'package:budget_app_flutter/view/transaction/transaction.dart';
@@ -24,6 +26,9 @@ class HomeView extends StatelessWidget {
   final CategoryListController categoryListController =
       Get.put(CategoryListController());
 
+  // final TransactionController transactionController =
+  //     Get.put(TransactionController());
+
   @override
   Widget build(BuildContext context) {
     final responsiveValues = calculateResponsiveValues(context);
@@ -35,6 +40,7 @@ class HomeView extends StatelessWidget {
     debugPrint(
       "A User's Categories are: ${categoryController.groupModel.length}",
     );
+
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: backgroundColor,
@@ -59,119 +65,144 @@ class HomeView extends StatelessWidget {
               child: Column(
                 children: [
                   SizedBox(height: responsiveValues['verticalSpacing']!),
-                  Obx(() => categoryController.isLoading.value
-                      ? Center(
-                          child: LoadingWidget(),
-                        )
-                      : categoryController.groupModel.isEmpty
-                          ? Center(
-                              child: EmptyCategory(
-                                iconData: Icons.category,
-                                title: "No Category",
-                                description: "Please add a new category",
-                              ),
-                            )
-                          : RefreshIndicator(
-                              onRefresh: () async {
-                                await categoryController.getUsersCategory();
-                              },
-                              child: Expanded(
-                                child: ListView.separated(
-                                  itemCount:
-                                      categoryController.groupModel.length,
-                                  shrinkWrap: true,
-                                  separatorBuilder: (context, index) =>
-                                      Divider(),
-                                  itemBuilder:
-                                      (BuildContext context, int index) =>
-                                          Dismissible(
-                                    key: Key(
-                                      categoryController.groupModel[index].id
-                                          .toString(),
-                                    ),
-                                    onDismissed: (direction) async {
-                                      if (index >=
+                  Obx(
+                    () => categoryController.isLoading.value
+                        ? Center(
+                            child: LoadingWidget(),
+                          )
+                        : categoryController.groupModel.isEmpty
+                            ? Center(
+                                child: EmptyCategory(
+                                  iconData: Icons.category,
+                                  title: "No Category",
+                                  description: "Please add a new category",
+                                ),
+                              )
+                            : RefreshIndicator(
+                                onRefresh: () async {
+                                  await categoryController.getUsersCategory();
+                                },
+                                child: Expanded(
+                                  child: ListView.separated(
+                                    itemCount:
+                                        categoryController.groupModel.length,
+                                    shrinkWrap: true,
+                                    separatorBuilder: (context, index) =>
+                                        Divider(),
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return Dismissible(
+                                        key: Key(
                                           categoryController
-                                              .groupModel.length) {
-                                        return;
-                                      }
-
-                                      await categoryListController
-                                          .deleteUserCategoryItem(
-                                        categoryController
-                                            .groupModel[index].id!,
-                                      );
-
-                                      await categoryController
-                                          .getUsersCategory();
-
-                                      // ToastWidget.showToast(
-                                      //   "${categoryController.groupModel[index].name} deleted successfully",
-                                      // );
-                                    },
-                                    background: Container(
-                                      color: Colors.red,
-                                      child: Padding(
-                                        padding: EdgeInsets.only(right: 16.0),
-                                        child: Icon(
-                                          Icons.delete,
-                                          color: Colors.white,
+                                              .groupModel[index].id
+                                              .toString(),
                                         ),
-                                      ),
-                                    ),
-                                    child: Container(
-                                      height:
-                                          responsiveValues['containerHeight']!,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(5),
-                                      ),
-                                      child: Center(
-                                        child: ListTile(
-                                          onTap: () {
-                                            debugPrint(
+                                        onDismissed: (direction) async {
+                                          if (index >=
                                               categoryController
-                                                  .groupModel[index].name,
-                                            );
+                                                  .groupModel.length) {
+                                            return;
+                                          }
 
-                                            debugPrint(
-                                              "${categoryController.groupModel[index].id}",
-                                            );
-                                            Get.to(
-                                              () => TransactionView(
-                                                categoryName: categoryController
-                                                    .groupModel[index].name,
-                                              ),
-                                            );
-                                          },
-                                          leading: Uri.parse(categoryController
-                                                      .groupModel[index].icon)
-                                                  .isAbsolute
-                                              ? Image.network(
-                                                  categoryController
-                                                      .groupModel[index].icon,
-                                                )
-                                              : Image.network(
-                                                  'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png',
-                                                ),
-                                          title: Text(categoryController
-                                              .groupModel[index].name),
-                                          trailing: Text(
+                                          await categoryListController
+                                              .deleteUserCategoryItem(
                                             categoryController
-                                                .groupModel[index].id
-                                                .toString(),
-                                            style: TextStyle(
-                                              color: mainColor,
-                                              fontWeight: FontWeight.bold,
+                                                .groupModel[index].id!,
+                                          );
+
+                                          await categoryController
+                                              .getUsersCategory();
+
+                                          // ToastWidget.showToast(
+                                          //   "${categoryController.groupModel[index].name} deleted successfully",
+                                          // );
+                                        },
+                                        background: Container(
+                                          color: Colors.red,
+                                          child: Padding(
+                                            padding:
+                                                EdgeInsets.only(right: 16.0),
+                                            child: Icon(
+                                              Icons.delete,
+                                              color: Colors.white,
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    ),
+                                        child: Container(
+                                          height: responsiveValues[
+                                              'containerHeight']!,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                          ),
+                                          child: Center(
+                                            child: ListTile(
+                                              onTap: () {
+                                                debugPrint(
+                                                  categoryController
+                                                      .groupModel[index].name,
+                                                );
+
+                                                debugPrint(
+                                                  "${categoryController.groupModel[index].id}",
+                                                );
+
+                                                debugPrint(
+                                                  categoryController
+                                                      .groupModel[index].name
+                                                      .toString(),
+                                                );
+
+                                                // debugPrint(
+                                                //   transactionController
+                                                //       .transactionModel.length
+                                                //       .toString(),
+                                                // );
+                                                Get.to(
+                                                  () => TransactionView(
+                                                    categoryName:
+                                                        categoryController
+                                                            .groupModel[index]
+                                                            .name,
+                                                    groupId: categoryController
+                                                        .groupModel[index].id!,
+                                                  ),
+                                                );
+                                              },
+                                              leading: Uri.parse(
+                                                          categoryController
+                                                              .groupModel[index]
+                                                              .icon)
+                                                      .isAbsolute
+                                                  ? Image.network(
+                                                      categoryController
+                                                          .groupModel[index]
+                                                          .icon,
+                                                    )
+                                                  : Image.network(
+                                                      'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png',
+                                                    ),
+                                              title: Text(categoryController
+                                                  .groupModel[index].name),
+                                              trailing: Text(
+                                                categoryController
+                                                    .groupModel[index].id
+                                                    .toString(),
+                                                style: TextStyle(
+                                                  color: mainColor,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ),
                               ),
-                            )),
+                  ),
                   SizedBox(
                     height: responsiveValues['verticalSpacing']!,
                   ),
